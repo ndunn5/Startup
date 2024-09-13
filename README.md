@@ -6,7 +6,7 @@ While you love your favorite artists, sometimes there just isn’t enough inform
 
 ## Design
 
-![Behindthebeat Outline](./IMG_4123.jpg) 
+![Behindthebeat Outline](IMG_4123.jpg) 
 
 # Behindthebeat
 
