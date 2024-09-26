@@ -71,21 +71,21 @@ This project outlines the structure of my application using HTML.
 
 ### HTML Pages
 
-- [ ] **Login Page**: This page includes an input box for the user to enter their credentials and a submit button to log in.
-- [ ] **Home Page**: This allows the user to search for an artist or browse the most popular artists.
+- [x] **Login Page**: This page includes an input box for the user to enter their credentials and a submit button to log in.
+- [x] **Home Page**: This allows the user to search for an artist or browse the most popular artists.
 
 ### Links
 
-- The home page links directly to the artists page.
-- The artists pages contain links for a few of their top songs.
+- [x] The home page links directly to the artists page.
+- [x] The artists pages contain links for a few of their top songs.
 
 ### Text
 
-- There is text showing people what to do in the search bar and also on each page to tell the user how to interact with the page.
+- [x] There is text showing people what to do in the search bar and also on each page to tell the user how to interact with the page.
 
 ### Images
 
-- There are images within each of the suggested artists pages.
+- [x] There are images within each of the suggested artists pages.
 
 ### Database/Login
 
@@ -94,8 +94,4 @@ This project outlines the structure of my application using HTML.
 
 ### WebSocket
 
-- The users' comments are updated in real-time, reflecting the comments and likes through WebSocket integration.
-
-
-
-
+- [x] The users' comments are updated in real-time, reflecting the comments and likes through WebSocket integration.
