@@ -65,5 +65,14 @@ While you love your favorite artists, sometimes there just isn’t enough inform
   - If a user likes a comment, it will immediately update for all users viewing that comment without needing a refresh.
   - Similarly, when a new comment is posted on a song, it will appear in real-time for others on that page.
 
+## HTML Deliverable
 
+For this deliverable, I built out the structure of my application using HTML.
+
+- [x] **HTML pages** - Two HTML pages that represent the ability to log in and browse artists.
+- [x] **Links** - The home page links directly to the artists page, which contains links for a few of their top songs.
+- [x] **Text** - There is text showing people what to do in the search bar and instructions on each page for user interaction.
+- [x] **Images** - There are images within each of the suggested artists' pages.
+- [x] **DB/Login** - The login page features an input box for username/password and a submit button to authenticate users. The artists and songs represent data pulled from a database.
+- [x] **WebSocket** - The users' comments are updated in real-time, reflecting the comments and likes through WebSocket integration.
 
