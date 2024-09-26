@@ -89,8 +89,8 @@ This project outlines the structure of my application using HTML.
 
 ### Database/Login
 
-- The login page features an input box for username/password and a submit button to authenticate users.
-- The artists and songs are designed to represent data pulled from a database.
+- [x] The login page features an input box for username/password and a submit button to authenticate users.
+- [x] The artists and songs are designed to represent data pulled from a database.
 
 ### WebSocket
 
