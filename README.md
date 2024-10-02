@@ -75,4 +75,5 @@ For this deliverable, I built out the structure of my application using HTML.
 - [x] **Images** - There are images within each of the suggested artists' pages.
 - [x] **DB/Login** - The login page features an input box for username/password and a submit button to authenticate users. The artists and songs represent data pulled from a database.
 - [x] **WebSocket** - The users' comments are updated in real-time, reflecting the comments and likes through WebSocket integration.
+- [X] **3rd party Web Service** - There should be a place holder now but it doesn't pull artists yet. 
 
