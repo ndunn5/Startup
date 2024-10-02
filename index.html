@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Behind The Beat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"> <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS (optional) -->
 </head>
 <body>
     <div class="top-right">
-        <a href="login.html">
-            <button class="login-btn">Login</button>
-        </a>
+        <a href="login.html" class="btn btn-primary">Login</a>
     </div>
     <header>
         <h1>Behind The Beat</h1>
@@ -29,15 +28,56 @@
             </form>
         </section>
     </main>
-    <nav>
-        <!-- Navigation links -->
-        <ul>
-            <li><a href="taylorSwift.html">Taylor Swift</a></li>
-            <li><a href="billieEillish.html">Billie Eilish</a></li>
-            <li><a href="drake.html">Drake</a></li>
-            <li><a href="kendrickLamar.html">Kendrick Lamar</a></li>
-        </ul>
-    </nav>
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <a href="taylorSwift.html">
+                    <img src="https://taylorpictures.net/albums/concerts/2024/theerastour/munichgermanyn1/normal_018.jpg" class="d-block w-100" alt="Taylor Swift">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Taylor Swift</h5>
+                    </div>
+                </a>
+            </div>
+            <div class="carousel-item">
+                <a href="billieEillish.html">
+                    <img src="https://media.gettyimages.com/id/2074591806/photo/hollywood-california-billie-eilish-attends-the-96th-annual-academy-awards-on-march-10-2024-in.jpg?s=612x612&w=0&k=20&c=o1nqk7KjPEFVUFe73NAhWGUWmZXjcS9wqPoLqov0leM=" class="d-block w-100" alt="Billie Eilish">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Billie Eilish</h5>
+                    </div>
+                </a>
+            </div>
+            <div class="carousel-item">
+                <a href="drake.html">
+                    <img src="https://media.gettyimages.com/id/1350328655/photo/long-beach-california-drake-speaks-onstage-during-drakes-till-death-do-us-part-rap-battle-on.jpg?s=612x612&w=0&k=20&c=RE45pkVPl_H2v-N-XBiav160y64fTvN75RwiLnQr75E=" class="d-block w-100" alt="Drake">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Drake</h5>
+                    </div>
+                </a>
+            </div>
+            <div class="carousel-item">
+                <a href="kendrickLamar.html">
+                    <img src="https://lastfm.freetls.fastly.net/i/u/770x0/ca6098de5524ce68b5ea26d56474beb6.jpg#ca6098de5524ce68b5ea26d56474beb6" class="d-block w-100" alt="Kendrick Lamar">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Kendrick Lamar</h5>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
     <p>
         new artists will be generated. This is where 3rd party service calls will go
     </p>
@@ -47,7 +87,7 @@
     <footer>
         <li><a href="https://github.com/ndunn5/Startup">My GitHub</a></li>
     </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script> <!-- Bootstrap JS -->
     <script src="script.js"></script> <!-- Link to external JavaScript (optional) -->
 </body>
 </html>
