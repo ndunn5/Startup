@@ -25,6 +25,10 @@
                     </li>
                 </ul>
                 <!-- Move the login button here -->
+                <form class="d-flex">
+                    <input class="form-control me-2" type="text" placeholder="Search">
+                    <button class="btn btn-primary" type="button">Search</button>
+                </form>
                 <a href="login.html" class="btn btn-primary">Login</a>
             </div>
         </div>
@@ -32,17 +36,22 @@
     
     <header>
     </header>
-    <main>
-        <section>
-            <form action="/submit" method="POST">
-                <label for="userInput">Start by typing in an Artist</label>
-                <input type="text" id="userInput" name="userInput" placeholder="try Taylor Swift" required>
-                <button type="submit">enter</button>
-                <h2>OR</h2>
-                <h2>browse some of your favorites</h2>
+    <main class="d-flex align-items-center justify-content-center min-vh-100">
+        <section class="container">
+            <form action="/submit" method="POST" class="p-4 border rounded shadow bg-light">
+                <div class="mb-3">
+                    <label for="userInput" class="form-label">Start by typing in an Artist</label>
+                    <input type="text" id="userInput" name="userInput" class="form-control" placeholder="Try Taylor Swift" required>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Enter</button>
+                </div>
             </form>
         </section>
-    </main>
+    </main> 
+    <div class="text-center my-4">
+        <h2> Or browse some of your favorites</h2>
+    </div>   
     <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
