@@ -12,9 +12,7 @@
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Behind the Beat</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
@@ -24,34 +22,32 @@
                         <a class="nav-link" href="index.html">Home</a>
                     </li>
                 </ul>
-                <!-- Move the login button here -->
-                <form class="d-flex">
-                    <input class="form-control me-2" type="text" placeholder="Search">
+            </div>
+            
+            <!-- Add a wrapper div with d-flex and justify-content-between for layout control -->
+            <div class="d-flex justify-content-between w-100">
+                <!-- Search form -->
+                <form class="d-flex flex-grow-1 me-2">
+                    <input class="form-control me-2" type="text" placeholder="Type in an Artist">
                     <button class="btn btn-primary" type="button">Search</button>
                 </form>
+    
+                <!-- Login button -->
                 <a href="login.html" class="btn btn-primary">Login</a>
             </div>
+    
+            <!-- Navbar toggler for smaller screens -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            
         </div>
     </nav>
     
+    
     <header>
     </header>
-    <main class="d-flex align-items-center justify-content-center min-vh-100">
-        <section class="container">
-            <form action="/submit" method="POST" class="p-4 border rounded shadow bg-light">
-                <div class="mb-3">
-                    <label for="userInput" class="form-label">Start by typing in an Artist</label>
-                    <input type="text" id="userInput" name="userInput" class="form-control" placeholder="Try Taylor Swift" required>
-                </div>
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary">Enter</button>
-                </div>
-            </form>
-        </section>
-    </main> 
-    <div class="text-center my-4">
-        <h2> Or browse some of your favorites</h2>
-    </div>   
     <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -102,6 +98,11 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
+    <main>
+    </main> 
+    <div class="text-center my-4">
+    </div>   
+    
     <p>
         new artists will be generated. This is where 3rd party service calls will go
     </p>

@@ -14,9 +14,7 @@
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Behind the Beat</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
@@ -26,18 +24,32 @@
                         <a class="nav-link" href="index.html">Home</a>
                     </li>
                 </ul>
-                <form class="d-flex">
-                    <input class="form-control me-2" type="text" placeholder="Search">
+            </div>
+            
+            <!-- Add a wrapper div with d-flex and justify-content-between for layout control -->
+            <div class="d-flex justify-content-between w-100">
+                <!-- Search form -->
+                <form class="d-flex flex-grow-1 me-2">
+                    <input class="form-control me-2" type="text" placeholder="Type in an Artist">
                     <button class="btn btn-primary" type="button">Search</button>
                 </form>
+    
+                <!-- Login button -->
                 <a href="login.html" class="btn btn-primary">Login</a>
             </div>
+    
+            <!-- Navbar toggler for smaller screens -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            
         </div>
     </nav>
 
     <header class="position-relative">
         <!-- Background image -->
-        <img src="https://wallpapers.com/images/high/kendrick-lamar-on-blue-brick-wall-l5609ydx4axjtbkr.webp" class="img-fluid w-100" alt="Kendrick Lamar">
+        <img src="https://media.gettyimages.com/id/1405302709/photo/glastonbury-england-kendrick-lamar-performs-on-the-pyramid-stage-during-day-five-of.jpg?s=612x612&w=0&k=20&c=OXi-JHE6wBhzWT3EnFskTaNUlF6ui2KafNXkolP5ld4=" class="img-fluid w-100" alt="Kendrick Lamar">
 
         <!-- Title overlay -->
         <div class="position-absolute top-50 start-50 translate-middle text-center text-white">

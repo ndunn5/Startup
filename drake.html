@@ -14,9 +14,7 @@
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Behind the Beat</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
@@ -26,18 +24,32 @@
                         <a class="nav-link" href="index.html">Home</a>
                     </li>
                 </ul>
-                <form class="d-flex">
-                    <input class="form-control me-2" type="text" placeholder="Search">
+            </div>
+            
+            <!-- Add a wrapper div with d-flex and justify-content-between for layout control -->
+            <div class="d-flex justify-content-between w-100">
+                <!-- Search form -->
+                <form class="d-flex flex-grow-1 me-2">
+                    <input class="form-control me-2" type="text" placeholder="Type in an Artist">
                     <button class="btn btn-primary" type="button">Search</button>
                 </form>
+    
+                <!-- Login button -->
                 <a href="login.html" class="btn btn-primary">Login</a>
             </div>
+    
+            <!-- Navbar toggler for smaller screens -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            
         </div>
     </nav>
 
     <header class="position-relative">
         <!-- Background image -->
-        <img src="https://media.gettyimages.com/id/1350328655/photo/long-beach-california-drake-speaks-onstage-during-drakes-till-death-do-us-part-rap-battle-on.jpg?s=612x612&w=0&k=20&c=RE45pkVPl_H2v-N-XBiav160y64fTvN75RwiLnQr75E=" class="img-fluid w-100" alt="Drake">
+        <img src="https://media.gettyimages.com/id/610058312/photo/las-vegas-nv-recording-artist-drake-performs-onstage-at-the-2016-iheartradio-music-festival-at.jpg?s=612x612&w=0&k=20&c=odEFeT8381FxUYXOcOd8PvY4g1aQDG78mw6a-Vz7pLs=" class="img-fluid w-100" alt="Drake">
 
         <!-- Title overlay -->
         <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
