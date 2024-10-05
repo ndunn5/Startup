@@ -5,81 +5,138 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>LUNCH</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"> <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="all.css">
 </head>
 <body>
-    <header>
-        <h1>LUNCH by Billie Eilish</h1>
-        <li><a href="aboutPage.html">About</a></li>
-        <li><a href="index.html">Home</a></li>
+    <nav class="navbar navbar-expand-sm navbar-dark custom-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Behind the Beat</a>
+    
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="aboutPage.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                </ul>
+            </div>
+    
+            <div class="d-flex justify-content-between w-100">
+                <form class="d-flex flex-grow-1 me-2">
+                    <input class="form-control me-2" type="text" placeholder="Type in an Artist">
+                    <button class="btn btn-primary" type="button">Search</button>
+                </form>
+                <a href="login.html" class="btn btn-primary">Login</a>
+            </div>
+    
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+    
+    <header class="py-5">
+        <div class="container text-center text-white">
+            <h1 class="fw-bold" style="font-size: 2rem;">LUNCH by Billie Eilish</h1>
+        </div>
     </header>
     
+    <div class="container my-5">
+        <div class="row">
+            <!-- Song Lyrics -->
+            <div class="col-md-6">
+                <p class="text-center">Oh, oh-oh
+                    I could eat that girl for lunch
+                    Yeah, she dances on my tongue
+                    Tastes like she might be the one
+                    And I could never get enough
+                    I could buy her so much stuff
+                    It's a craving, not a crush, huh
+                    "Call me when you're there"
+                    Said, "I bought you somethin' rare
+                    And I left it under 'Claire'"
+                    So now, she's comin' up the stairs
+                    So I'm pullin' up a chair
+                    And I'm puttin' up my hair
+                    Baby, I think you were made for me
+                    Somebody write down the recipe
+                    Been tryin' hard not to overeat
+                    You're just so sweet
+                    I'll run a shower for you like you want
+                    Clothes on the counter for you, try 'em on
+                    If I'm allowed, I'll help you take 'em off
+                    (Huh)
+                    I could eat that girl for lunch
+                    Yeah, she dances on my tongue
+                    Tastes like she might be the one
+                    And I could never get enough
+                    I could buy her so much stuff
+                    It's a craving, not a crush, huh
+                    Oh, I just wanna get her off, oh
+                    Oh
+                    Oh, oh
+                    Oh
+                    She's takin' pictures in the mirror
+                    Oh my God, her skin's so clear
+                    Tell her, "Bring that over here"
+                    You need a seat? I'll volunteer
+                    Now she's smilin' ear to ear
+                    She's the headlights, I'm the deer
+                    I've said it all before, but I'll say it again
+                    I'm interested in more than just bein' your friend
+                    I don't wanna break it, just want it to bend
+                    Do you know how to bend?
+                    I could eat that girl for lunch
+                    She dances on my tongue
+                    I know it's just a hunch
+                    But she might be the one
+                    I could
+                    Eat that girl for lunch
+                    Yeah, she
+                    Tastes like she might be the one
+                    I could
+                    I could
+                    Eat that girl for lunch
+                    Yeah, she
+                    Yeah, she
+                    Tastes like she might be the one
+                </p>
+            </div>
     
-    <p>Oh, oh-oh
-        I could eat that girl for lunch
-        Yeah, she dances on my tongue
-        Tastes like she might be the one
-        And I could never get enough
-        I could buy her so much stuff
-        It's a craving, not a crush, huh
-        "Call me when you're there"
-        Said, "I bought you somethin' rare
-        And I left it under 'Claire'"
-        So now, she's comin' up the stairs
-        So I'm pullin' up a chair
-        And I'm puttin' up my hair
-        Baby, I think you were made for me
-        Somebody write down the recipe
-        Been tryin' hard not to overeat
-        You're just so sweet
-        I'll run a shower for you like you want
-        Clothes on the counter for you, try 'em on
-        If I'm allowed, I'll help you take 'em off
-        (Huh)
-        I could eat that girl for lunch
-        Yeah, she dances on my tongue
-        Tastes like she might be the one
-        And I could never get enough
-        I could buy her so much stuff
-        It's a craving, not a crush, huh
-        Oh, I just wanna get her off, oh
-        Oh
-        Oh, oh
-        Oh
-        She's takin' pictures in the mirror
-        Oh my God, her skin's so clear
-        Tell her, "Bring that over here"
-        You need a seat? I'll volunteer
-        Now she's smilin' ear to ear
-        She's the headlights, I'm the deer
-        I've said it all before, but I'll say it again
-        I'm interested in more than just bein' your friend
-        I don't wanna break it, just want it to bend
-        Do you know how to bend?
-        I could eat that girl for lunch
-        She dances on my tongue
-        I know it's just a hunch
-        But she might be the one
-        I could
-        Eat that girl for lunch
-        Yeah, she
-        Tastes like she might be the one
-        I could
-        I could
-        Eat that girl for lunch
-        Yeah, she
-        Yeah, she
-        Tastes like she might be the one</p>
-        <form>
-            <textarea id="commentBox" name="commentBox" rows="4" placeholder="What do you think is behind the beat?"></textarea>
-            <br>
-            <input type="submit" value="Comment">
-        </form>
-        <h1>Other People's thoughts</h1>
-        <p>
-            dude1: I really felt where (s)he said __________. I think that means ______
-        </p>
-        <p>
-            dude2: I really felt where (s)he said __________. I think that means ______
-        </p>  
+            <!-- Comment Section -->
+            <div class="col-md-6">
+                <!-- Social Media Style Comments -->
+                <div class="d-flex align-items-start mb-4">
+                    <img src="https://media.gettyimages.com/id/635359428/photo/new-york-ny-rumor-the-german-shepherd-poses-for-photos-after-winning-best-in-show-at-the.jpg?s=612x612&w=0&k=20&c=R8o1kV8KPl9z7QunBBgOHupjm_sY7n-U-7PFKKJZSC0=" alt="User Avatar" class="small-avatar me-3">
+                    <div class="border p-3 rounded w-100">
+                        <p class="mb-1"><strong>dude1:</strong> I really felt where (s)he said __________. I think that means ______</p>
+                        <small class="text-muted">5 minutes ago</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start mb-4">
+                    <img src="https://media.gettyimages.com/id/85438939/photo/a-soft-coated-wheaten-terrier-dog-named-zoey-waits-for-the-start-of-a-parade-at-the-woofstock.jpg?s=612x612&w=0&k=20&c=n644q3tfcbFR1qEPG51O15KUiF3pMrKl5zuIY4V7sjk=" alt="User Avatar" class="small-avatar me-3">
+                    <div class="border p-3 rounded w-100">
+                        <p class="mb-1"><strong>dude2:</strong> I really felt where (s)he said __________. I think that means ______</p>
+                        <small class="text-muted">10 minutes ago</small>
+                    </div>
+                </div>
+                <form>
+                    <div class="form-group mb-3">
+                        <textarea class="form-control" id="commentBox" name="commentBox" rows="4" placeholder="share what you think is behind the beat"></textarea>
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-primary" value="Comment">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+            
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script> <!-- Bootstrap JS -->
+        <script src="script.js"></script> <!-- Link to external JavaScript (optional) -->
 </body>
 </html>
