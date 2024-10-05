@@ -7,6 +7,31 @@ header {
 .small-avatar {
     width: 50px;
     height: 50px;
-    object-fit: cover; /* Ensures the image doesn't get distorted */
-    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover; 
+    border-radius: 50%; 
+}
+.btn {
+    background-color: #fc1111; 
+    color: white;              
+    padding: 10px 15px;         
+    border: none;               
+    border-radius: 5px;         
+    text-decoration: none;      
+    display: inline-block;      
+    cursor: pointer;            
+    transition: background-color 0.3s, box-shadow 0.3s;  
+}
+
+.btn:hover {
+    background-color: #d41010;
+}
+
+.btn:active, .btn:focus {
+    background-color: #d41010;
+    outline: none;             
+    box-shadow: none;          
+}
+body, header {
+    margin: 0;
+    padding: 0;
 }

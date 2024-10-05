@@ -5,89 +5,147 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>U My Everything</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"> <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="all.css">
 </head>
 <body>
-    <header>
-        <h1>U My Everything by Drake</h1>
-        <li><a href="aboutPage.html">About</a></li>
-        <li><a href="index.html">Home</a></li>
+    <nav class="navbar navbar-expand-sm navbar-dark custom-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Behind the Beat</a>
+    
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="aboutPage.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                </ul>
+            </div>
+    
+            <div class="d-flex justify-content-between w-100">
+                <form class="d-flex flex-grow-1 me-2">
+                    <input class="form-control me-2" type="text" placeholder="Type in an Artist">
+                    <button class="btn btn-primary" type="button">Search</button>
+                </form>
+                <a href="login.html" class="btn btn-primary">Login</a>
+            </div>
+    
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+    
+    <header class="py-5">
+        <div class="container text-center text-white">
+            <h1 class="fw-bold" style="font-size: 2rem;">U My Everything by Drake</h1>
+        </div>
     </header>
     
-    <p>Uh-huh, yeah
-        (Tay Keith, fuck these niggas up)
-        Yeah, yeah, yeah
-        Ah-ahem
-        I say hoo, baby (yep, I love you, bae)
-        Bae, I love you, you my everything (this for you)
-        I wrote this for you, baby
-        Bae, I love you, you my everything
-        I'm your main bitch, fuck a wedding ring
-        We both in fast cars and we switchin' lanes (yoom)
-        When I'm away from you, you always on my brain
-        Nigga, we go together, tell them hoes we go together (it's there)
-        Nigga, we go together, tell them hoes we go together (I swear)
-        Nigga, we go together, tell them hoes we go together (I don't care)
-        Nigga, we go together, tell them hoes we go together (Sexyy, in this world)
-        He protect me, let them pistols bang (baow)
-        If you fuck with me, go tattoo my name
-        I like to spoil him and he do the same
-        I think we soulmates, you my twin flame
-        Tell them hoes that shit dead, I don't play 'bout you (no)
-        He got my head fucked up and he hella cute
-        It turn me on when he pull up on me in that coupe (skrrt, skrrt)
-        They be askin' what is we? I'm like, "My whoopty-woo" (on Blood)
-        He be tellin' me he love me and I love him too (It's there)
-        I only knew him for a week, but I swear this my boo (I swear)
-        I might let the nigga trap me, bitch, my summer through (I don't care)
-        But I don't even give a fuck, do anything for you (in this world)
-        Bae, I love you, you my everything
-        I'm your main bitch, fuck a wedding ring
-        We both in fast cars and we switchin' lanes (yoom)
-        When I'm away from you, you always on my brain
-        Nigga, we go together, tell them hoes we go together (it's there)
-        Nigga, we go together, tell them hoes we go together (I swear)
-        Nigga, we go together, tell them hoes we go together (I don't care)
-        Nigga, we go together, tell them hoes we go together (yeah, Sexyy, in this world)
-        Give me the pussy, I'm bullyin' shit
-        Hit from the back and I'm pullin' your shit
-        I had some smoke in the city, I wanted to see you, but, baby, I couldn't just dip
-        You know the timin' we on when my niggas start lurkin' and tyin' they hoodies and shit
-        Soon as this shit get resolved, I'll turn to librarian for you, I'm bookin' that shit
-        Let's do it, Red, girl, I love you, let's do it
-        Showed enough love to the city, I promise, so let's get the fuck out St. Louis
-        Maybe we go to Saint Lucia, I been there, so I'll introduce you
-        Or maybe you go to Saint Martin with me if these niggas take break and quit startin' with me
-        Maybe we go to Saint Kitts, if you and your BD are calling it splits
-        Then maybe we call it an accident, you slip, you trip, you fall on my dick
-        Why you love me? Still a mystery, me and the surgeon got history
-        I changed a lot of girls' lives for real, they need a new body, they hittin' me, ayy
-        BBL Drizzy, they want a new body, they ask me for it
-        The last one, Jung, he did it for free 'cause I sent over so many past ones for him
-        But Red, don't even worry about all of that shit, just keep it natural for 'em, I swear
-        I got a passion for you, I swear, I got attraction for you, I swear
-        Yeah, you think I'm a bachelor, girl, but I swear
-        You ain't get your master's, but I'm still breakin' your back in the master bedroom, I swear
-        You send a pic in them shorts and I had to send you a caption like I was there
-        You the hood bitch of my dreams, Sexyy, girl, you just ask for me and I'm there
-        Bae, I love you, you my everything
-        I'm your main bitch, fuck a wedding ring
-        We both in fast cars and we switchin' lanes (yoom)
-        When I'm away from you, you always on my brain
-        Nigga, we go together, tell them hoes we go together (it's there)
-        Nigga, we go together, tell them hoes we go together (I swear)
-        Nigga, we go together, tell them hoes we go together (I don't care)
-        Nigga, we go together, tell them hoes we go together (Sexyy, in this world)</p>
-        <form>
-            <textarea id="commentBox" name="commentBox" rows="4" placeholder="What do you think is behind the beat?"></textarea>
-            <br>
-            <input type="submit" value="Comment">
-        </form>
-        <h1>Other People's thoughts</h1>
-        <p>
-            dude1: I really felt where (s)he said __________. I think that means ______
-        </p>
-        <p>
-            dude2: I really felt where (s)he said __________. I think that means ______
-        </p>  
+    <div class="container my-5">
+        <div class="row">
+            <!-- Song Lyrics -->
+            <div class="col-md-6">
+                <p class="text-center">Uh-huh, yeah
+                    (Tay Keith, fuck these niggas up)
+                    Yeah, yeah, yeah
+                    Ah-ahem
+                    I say hoo, baby (yep, I love you, bae)
+                    Bae, I love you, you my everything (this for you)
+                    I wrote this for you, baby
+                    Bae, I love you, you my everything
+                    I'm your main bitch, fuck a wedding ring
+                    We both in fast cars and we switchin' lanes (yoom)
+                    When I'm away from you, you always on my brain
+                    Nigga, we go together, tell them hoes we go together (it's there)
+                    Nigga, we go together, tell them hoes we go together (I swear)
+                    Nigga, we go together, tell them hoes we go together (I don't care)
+                    Nigga, we go together, tell them hoes we go together (Sexyy, in this world)
+                    He protect me, let them pistols bang (baow)
+                    If you fuck with me, go tattoo my name
+                    I like to spoil him and he do the same
+                    I think we soulmates, you my twin flame
+                    Tell them hoes that shit dead, I don't play 'bout you (no)
+                    He got my head fucked up and he hella cute
+                    It turn me on when he pull up on me in that coupe (skrrt, skrrt)
+                    They be askin' what is we? I'm like, "My whoopty-woo" (on Blood)
+                    He be tellin' me he love me and I love him too (It's there)
+                    I only knew him for a week, but I swear this my boo (I swear)
+                    I might let the nigga trap me, bitch, my summer through (I don't care)
+                    But I don't even give a fuck, do anything for you (in this world)
+                    Bae, I love you, you my everything
+                    I'm your main bitch, fuck a wedding ring
+                    We both in fast cars and we switchin' lanes (yoom)
+                    When I'm away from you, you always on my brain
+                    Nigga, we go together, tell them hoes we go together (it's there)
+                    Nigga, we go together, tell them hoes we go together (I swear)
+                    Nigga, we go together, tell them hoes we go together (I don't care)
+                    Nigga, we go together, tell them hoes we go together (yeah, Sexyy, in this world)
+                    Give me the pussy, I'm bullyin' shit
+                    Hit from the back and I'm pullin' your shit
+                    I had some smoke in the city, I wanted to see you, but, baby, I couldn't just dip
+                    You know the timin' we on when my niggas start lurkin' and tyin' they hoodies and shit
+                    Soon as this shit get resolved, I'll turn to librarian for you, I'm bookin' that shit
+                    Let's do it, Red, girl, I love you, let's do it
+                    Showed enough love to the city, I promise, so let's get the fuck out St. Louis
+                    Maybe we go to Saint Lucia, I been there, so I'll introduce you
+                    Or maybe you go to Saint Martin with me if these niggas take break and quit startin' with me
+                    Maybe we go to Saint Kitts, if you and your BD are calling it splits
+                    Then maybe we call it an accident, you slip, you trip, you fall on my dick
+                    Why you love me? Still a mystery, me and the surgeon got history
+                    I changed a lot of girls' lives for real, they need a new body, they hittin' me, ayy
+                    BBL Drizzy, they want a new body, they ask me for it
+                    The last one, Jung, he did it for free 'cause I sent over so many past ones for him
+                    But Red, don't even worry about all of that shit, just keep it natural for 'em, I swear
+                    I got a passion for you, I swear, I got attraction for you, I swear
+                    Yeah, you think I'm a bachelor, girl, but I swear
+                    You ain't get your master's, but I'm still breakin' your back in the master bedroom, I swear
+                    You send a pic in them shorts and I had to send you a caption like I was there
+                    You the hood bitch of my dreams, Sexyy, girl, you just ask for me and I'm there
+                    Bae, I love you, you my everything
+                    I'm your main bitch, fuck a wedding ring
+                    We both in fast cars and we switchin' lanes (yoom)
+                    When I'm away from you, you always on my brain
+                    Nigga, we go together, tell them hoes we go together (it's there)
+                    Nigga, we go together, tell them hoes we go together (I swear)
+                    Nigga, we go together, tell them hoes we go together (I don't care)
+                    Nigga, we go together, tell them hoes we go together (Sexyy, in this world)
+                </p>
+            </div>
+    
+            <!-- Comment Section -->
+            <div class="col-md-6">
+                <!-- Social Media Style Comments -->
+                <div class="d-flex align-items-start mb-4">
+                    <img src="https://media.gettyimages.com/id/635359428/photo/new-york-ny-rumor-the-german-shepherd-poses-for-photos-after-winning-best-in-show-at-the.jpg?s=612x612&w=0&k=20&c=R8o1kV8KPl9z7QunBBgOHupjm_sY7n-U-7PFKKJZSC0=" alt="User Avatar" class="small-avatar me-3">
+                    <div class="border p-3 rounded w-100">
+                        <p class="mb-1"><strong>dude1:</strong> I really felt where (s)he said __________. I think that means ______</p>
+                        <small class="text-muted">5 minutes ago</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start mb-4">
+                    <img src="https://media.gettyimages.com/id/85438939/photo/a-soft-coated-wheaten-terrier-dog-named-zoey-waits-for-the-start-of-a-parade-at-the-woofstock.jpg?s=612x612&w=0&k=20&c=n644q3tfcbFR1qEPG51O15KUiF3pMrKl5zuIY4V7sjk=" alt="User Avatar" class="small-avatar me-3">
+                    <div class="border p-3 rounded w-100">
+                        <p class="mb-1"><strong>dude2:</strong> I really felt where (s)he said __________. I think that means ______</p>
+                        <small class="text-muted">10 minutes ago</small>
+                    </div>
+                </div>
+                <form>
+                    <div class="form-group mb-3">
+                        <textarea class="form-control" id="commentBox" name="commentBox" rows="4" placeholder="share what you think is behind the beat"></textarea>
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-primary" value="Comment">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+            
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script> <!-- Bootstrap JS -->
+        <script src="script.js"></script> <!-- Link to external JavaScript (optional) -->
 </body>
 </html>
