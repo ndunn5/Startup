@@ -35,6 +35,13 @@ body, header {
     margin: 0;
     padding: 0;
 }
+.carousel {
+    max-width: 800px;
+    max-height: 500px;
+    margin: 0 auto;
+    padding: 10px;
+    margin-bottom: 40px; 
+}
 .carousel-caption {
     position: absolute;           
     top: 5px;                   
@@ -93,4 +100,20 @@ body, header {
 
 .position-absolute.top-50.start-50.translate-middle.text-center.text-white {
     background-color: rgba(0, 0, 0, 0.5);    
+}
+.title{
+    text-align: center;
+    background-color: #fc1111;
+    color:#ffffff;
+    padding: 10px;
+}
+.text-center.p-3.bg-secondary{
+    color:#fc1111
+}
+.custom-footer{
+    background-color:#454545;
+    color: green;
+}
+.custom-footer-bottom{
+    background-color: #bebdbd;
 }
