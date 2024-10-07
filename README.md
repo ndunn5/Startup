@@ -75,5 +75,15 @@ For this deliverable, I built out the structure of my application using HTML.
 - [x] **Images** - There are images within each of the suggested artists' pages.
 - [x] **DB/Login** - The login page features an input box for username/password and a submit button to authenticate users. The artists and songs represent data pulled from a database.
 - [x] **WebSocket** - The users' comments are updated in real-time, reflecting the comments and likes through WebSocket integration.
-- [X] **3rd party Web Service** - There should be a place holder now but it doesn't pull artists yet. 
+- [X] **3rd party Web Service** - There should be a place holder now but it doesn't pull artists yet.
+
+## CSS Deliverable
+
+For this deliverable, I built out the style of my application using CSS.
+
+- [x] Responsive Design - The application layout is responsive across different screen sizes, adapting elements for desktop, tablet, and mobile views.
+- [x] Navigation Bar - The navigation bar is styled with custom colors, padding, and hover effects, ensuring it looks clean and consistent on all pages.
+- [x] Carousel - The carousel component is styled with custom captions, ensuring the backdrop resizes dynamically with the text while maintaining smooth transitions between images.
+- [x] Text Styling - Fonts and text colors are customized, and the layout adjusts text size depending on the screen width to enhance readability.
+- [x] Buttons and Forms - Buttons are styled for consistency, with hover effects and margin adjustments for a polished user interaction.
 
