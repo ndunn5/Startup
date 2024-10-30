@@ -1,0 +1,18 @@
+{
+  "name": "behindthebeatrepo",
+  "version": "1.0.0",
+  "description": "Have you ever been listening to a song and wondered, *What did they really mean by that?* Maybe you’ve even googled the lyrics, only to come up empty-handed.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^5.4.10"
+  }
+}
