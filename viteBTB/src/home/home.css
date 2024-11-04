@@ -1,0 +1,5 @@
+.container-fluid.bg-secondary.text-center {
+    /* Your styles here */
+    background-color: white !important; /* Force background color to white */
+    color: black; /* Example: changing text color to black */
+}
