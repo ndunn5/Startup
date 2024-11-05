@@ -4,7 +4,6 @@ import './home.css';
 import { Link } from 'react-router-dom';
 import { tSwift, billieEilish, drake, kendrickLamar } from './artists';
 
-
 const Navbar = ({ resetArtist }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
