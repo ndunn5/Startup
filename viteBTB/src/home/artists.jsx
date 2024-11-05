@@ -105,6 +105,3 @@ export const KendrickLamar = () => {
         </>
     );
 };
-
-export default TSwift;
-
