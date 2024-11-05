@@ -21,7 +21,7 @@ export default function About() {
           <div className="row mb-4">
             <div className="col text-center">
               <h2 className="fw-bold" >Mission</h2>
-              <p className="lead">
+              <p className="lead2">
                 The aim is to provide a platform for music lovers to discover, discuss, and enjoy their favorite artists and songs.
               </p>
             </div>
@@ -29,7 +29,7 @@ export default function About() {
           <div className="row mb-4">
             <div className="col text-center">
               <h2 className="fw-bold" >Vision</h2>
-              <p className="lead">
+              <p className="lead2">
                 To connect music enthusiasts around the world that can share their interpretations of songs, creating a tight-knit community.
               </p>
             </div>
@@ -37,7 +37,7 @@ export default function About() {
           <div className="row">
             <div className="col text-center">
               <h2 className="fw-bold" >Team</h2>
-              <p className="lead">
+              <p className="lead2">
                 A music lover dedicated to enhancing the music experience online.
               </p>
             </div>
