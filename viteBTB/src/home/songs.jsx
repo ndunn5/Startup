@@ -726,19 +726,372 @@ export const Lunch = () => {
 //Drake 
 export const UMyEverything = () => {
     return (
-        <main>U My everything</main>
+        <>
+            <header className="py-5">
+                <div className="container text-center text-white">
+                    <h1 className="fw-bold" style={{ fontSize: '2rem' }}>U My Everything by Drake</h1>
+                </div>
+            </header>
+    
+            {/* Main Content: Lyrics and Comment Section */}
+            <div className="container my-5">
+                <div className="row">
+                    {/* Song Lyrics Section */}
+                    <div className="col-md-6">
+                        <p className="text-center">Uh-huh, yeah
+                    (Tay Keith, fuck these niggas up)
+                    Yeah, yeah, yeah
+                    Ah-ahem
+                    I say hoo, baby (yep, I love you, bae)
+                    Bae, I love you, you my everything (this for you)
+                    I wrote this for you, baby
+                    Bae, I love you, you my everything
+                    I'm your main bitch, fuck a wedding ring
+                    We both in fast cars and we switchin' lanes (yoom)
+                    When I'm away from you, you always on my brain
+                    Nigga, we go together, tell them hoes we go together (it's there)
+                    Nigga, we go together, tell them hoes we go together (I swear)
+                    Nigga, we go together, tell them hoes we go together (I don't care)
+                    Nigga, we go together, tell them hoes we go together (Sexyy, in this world)
+                    He protect me, let them pistols bang (baow)
+                    If you fuck with me, go tattoo my name
+                    I like to spoil him and he do the same
+                    I think we soulmates, you my twin flame
+                    Tell them hoes that shit dead, I don't play 'bout you (no)
+                    He got my head fucked up and he hella cute
+                    It turn me on when he pull up on me in that coupe (skrrt, skrrt)
+                    They be askin' what is we? I'm like, "My whoopty-woo" (on Blood)
+                    He be tellin' me he love me and I love him too (It's there)
+                    I only knew him for a week, but I swear this my boo (I swear)
+                    I might let the nigga trap me, bitch, my summer through (I don't care)
+                    But I don't even give a fuck, do anything for you (in this world)
+                    Bae, I love you, you my everything
+                    I'm your main bitch, fuck a wedding ring
+                    We both in fast cars and we switchin' lanes (yoom)
+                    When I'm away from you, you always on my brain
+                    Nigga, we go together, tell them hoes we go together (it's there)
+                    Nigga, we go together, tell them hoes we go together (I swear)
+                    Nigga, we go together, tell them hoes we go together (I don't care)
+                    Nigga, we go together, tell them hoes we go together (yeah, Sexyy, in this world)
+                    Give me the pussy, I'm bullyin' shit
+                    Hit from the back and I'm pullin' your shit
+                    I had some smoke in the city, I wanted to see you, but, baby, I couldn't just dip
+                    You know the timin' we on when my niggas start lurkin' and tyin' they hoodies and shit
+                    Soon as this shit get resolved, I'll turn to librarian for you, I'm bookin' that shit
+                    Let's do it, Red, girl, I love you, let's do it
+                    Showed enough love to the city, I promise, so let's get the fuck out St. Louis
+                    Maybe we go to Saint Lucia, I been there, so I'll introduce you
+                    Or maybe you go to Saint Martin with me if these niggas take break and quit startin' with me
+                    Maybe we go to Saint Kitts, if you and your BD are calling it splits
+                    Then maybe we call it an accident, you slip, you trip, you fall on my dick
+                    Why you love me? Still a mystery, me and the surgeon got history
+                    I changed a lot of girls' lives for real, they need a new body, they hittin' me, ayy
+                    BBL Drizzy, they want a new body, they ask me for it
+                    The last one, Jung, he did it for free 'cause I sent over so many past ones for him
+                    But Red, don't even worry about all of that shit, just keep it natural for 'em, I swear
+                    I got a passion for you, I swear, I got attraction for you, I swear
+                    Yeah, you think I'm a bachelor, girl, but I swear
+                    You ain't get your master's, but I'm still breakin' your back in the master bedroom, I swear
+                    You send a pic in them shorts and I had to send you a caption like I was there
+                    You the hood bitch of my dreams, Sexyy, girl, you just ask for me and I'm there
+                    Bae, I love you, you my everything
+                    I'm your main bitch, fuck a wedding ring
+                    We both in fast cars and we switchin' lanes (yoom)
+                    When I'm away from you, you always on my brain
+                    Nigga, we go together, tell them hoes we go together (it's there)
+                    Nigga, we go together, tell them hoes we go together (I swear)
+                    Nigga, we go together, tell them hoes we go together (I don't care)
+                    Nigga, we go together, tell them hoes we go together (Sexyy, in this world)
+                    </p>
+                    </div>
+    
+                    {/* Comment Section */}
+                    <div className="col-md-6">
+                        {/* Social Media Style Comments */}
+                        <div className="d-flex align-items-start mb-4">
+                            <img 
+                                src="https://media.gettyimages.com/id/635359428/photo/new-york-ny-rumor-the-german-shepherd-poses-for-photos-after-winning-best-in-show-at-the.jpg?s=612x612&w=0&k=20&c=R8o1kV8KPl9z7QunBBgOHupjm_sY7n-U-7PFKKJZSC0=" 
+                                alt="User Avatar" 
+                                className="small-avatar me-3" 
+                            />
+                            <div className="border p-3 rounded w-100">
+                                <p className="mb-1"><strong>dude1:</strong> I really felt where (s)he said __________. I think that means ______</p>
+                                <small className="text-muted">5 minutes ago</small>
+                            </div>
+                        </div>
+                        <div className="d-flex align-items-start mb-4">
+                            <img 
+                                src="https://media.gettyimages.com/id/85438939/photo/a-soft-coated-wheaten-terrier-dog-named-zoey-waits-for-the-start-of-a-parade-at-the-woofstock.jpg?s=612x612&w=0&k=20&c=n644q3tfcbFR1qEPG51O15KUiF3pMrKl5zuIY4V7sjk=" 
+                                alt="User Avatar" 
+                                className="small-avatar me-3" 
+                            />
+                            <div className="border p-3 rounded w-100">
+                                <p className="mb-1"><strong>dude2:</strong> I really felt where (s)he said __________. I think that means ______</p>
+                                <small className="text-muted">10 minutes ago</small>
+                            </div>
+                        </div>
+                        {/* Comment Form */}
+                        <form>
+                            <div className="form-group mb-3">
+                                <textarea 
+                                    className="form-control" 
+                                    id="commentBox" 
+                                    name="commentBox" 
+                                    rows="4" 
+                                    placeholder="share what you think is behind the beat"
+                                ></textarea>
+                            </div>
+                            <div className="text-center">
+                                <input type="submit" className="btn btn-primary" value="Comment" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 };
 
 export const OneDance = () => {
     return (
-        <main>one Dance</main>
+        <>
+            <header className="py-5">
+                <div className="container text-center text-white">
+                    <h1 className="fw-bold" style={{ fontSize: '2rem' }}>One Dance by Drake</h1>
+                </div>
+            </header>
+    
+            {/* Main Content: Lyrics and Comment Section */}
+            <div className="container my-5">
+                <div className="row">
+                    {/* Song Lyrics Section */}
+                    <div className="col-md-6">
+                        <p className="text-center">Baby, I like your style
+                    Grips on your waist
+                    Front way, back way
+                    You know that I don't play
+                    Streets not safe
+                    But I never run away
+                    Even when I'm away
+                    OT, OT, there's never much love when we go OT
+                    I pray to make it back in one piece
+                    I pray, I pray
+                    That's why I need a one dance
+                    Got a Hennessy in my hand
+                    One more time 'fore I go
+                    Higher powers taking a hold on me
+                    I need a one dance
+                    Got a Hennessy in my hand
+                    One more time 'fore I go
+                    Higher powers taking a hold on me
+                    Baby, I like your style
+                    Strength and guidance
+                    All that I'm wishin' for my friends
+                    Nobody makes it from my ends
+                    I had to bust up the silence
+                    You know you gotta stick by me
+                    Soon as you see the text, reply me
+                    I don't wanna spend time fighting
+                    We've got no time
+                    And that's why I need a one dance
+                    Got a Hennessy in my hand
+                    One more time 'fore I go
+                    Higher powers taking a hold on me
+                    I need a one dance
+                    Got a Hennessy in my hand
+                    One more time 'fore I go
+                    Higher powers taking a hold on me
+                    Got a pretty girl and she love me long time
+                    Wine it, wine it, and she love me long time
+                    Ooh yeah, just steady and wine up
+                    Back up, back up, back up and wine up
+                    Back up, back up and wine it
+                    Girl, just back up, back up, back up and wine down
+                    Ooh yeah, just steady and wine up
+                    Back, up, back up and wine it, girl
+                    Ooh, tell me
+                    I need to know, where do you wanna go?
+                    'Cause if you're down, I'll take it slow
+                    Make you lose control
+                    Where, where, where
+                    Where, where, where, where (ooh yeah, very long time)
+                    (Back, up, back up and wine it, girl)
+                    'Cause if you're down (back up, back up and)
+                    'Cause if you're down (back up, back up and)
+                    'Cause if you're down (back up, back up and)
+                    I need a one dance
+                    Got a Hennessy in my hand
+                    One more time 'fore I go
+                    Higher powers taking a hold on me
+                    I need a one dance
+                    Got a Hennessy in my hand
+                    One more time 'fore I go
+                    Higher powers taking a hold on me
+                    </p>
+                    </div>
+    
+                    {/* Comment Section */}
+                    <div className="col-md-6">
+                        {/* Social Media Style Comments */}
+                        <div className="d-flex align-items-start mb-4">
+                            <img 
+                                src="https://media.gettyimages.com/id/635359428/photo/new-york-ny-rumor-the-german-shepherd-poses-for-photos-after-winning-best-in-show-at-the.jpg?s=612x612&w=0&k=20&c=R8o1kV8KPl9z7QunBBgOHupjm_sY7n-U-7PFKKJZSC0=" 
+                                alt="User Avatar" 
+                                className="small-avatar me-3" 
+                            />
+                            <div className="border p-3 rounded w-100">
+                                <p className="mb-1"><strong>dude1:</strong> I really felt where (s)he said __________. I think that means ______</p>
+                                <small className="text-muted">5 minutes ago</small>
+                            </div>
+                        </div>
+                        <div className="d-flex align-items-start mb-4">
+                            <img 
+                                src="https://media.gettyimages.com/id/85438939/photo/a-soft-coated-wheaten-terrier-dog-named-zoey-waits-for-the-start-of-a-parade-at-the-woofstock.jpg?s=612x612&w=0&k=20&c=n644q3tfcbFR1qEPG51O15KUiF3pMrKl5zuIY4V7sjk=" 
+                                alt="User Avatar" 
+                                className="small-avatar me-3" 
+                            />
+                            <div className="border p-3 rounded w-100">
+                                <p className="mb-1"><strong>dude2:</strong> I really felt where (s)he said __________. I think that means ______</p>
+                                <small className="text-muted">10 minutes ago</small>
+                            </div>
+                        </div>
+                        {/* Comment Form */}
+                        <form>
+                            <div className="form-group mb-3">
+                                <textarea 
+                                    className="form-control" 
+                                    id="commentBox" 
+                                    name="commentBox" 
+                                    rows="4" 
+                                    placeholder="share what you think is behind the beat"
+                                ></textarea>
+                            </div>
+                            <div className="text-center">
+                                <input type="submit" className="btn btn-primary" value="Comment" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 };
 
+
 export const GodsPlan = () => {
     return (
-        <main>God's Plan</main>
+        <>
+            <header className="py-5">
+                <div className="container text-center text-white">
+                    <h1 className="fw-bold" style={{ fontSize: '2rem' }}>God's Plan by Drake</h1>
+                </div>
+            </header>
+    
+            {/* Main Content: Lyrics and Comment Section */}
+            <div className="container my-5">
+                <div className="row">
+                    {/* Song Lyrics Section */}
+                    <div className="col-md-6">
+                        <p className="text-center">And, they wishin' and wishin' and wishin' and wishin'
+        They wishin' on me, yeah
+        I been movin' calm, don't start no trouble with me
+        Tryna keep it peaceful is a struggle for me
+        Don't pull up at 6 AM to cuddle with me
+        You know how I like it when you lovin' on me
+        I don't wanna die for them to miss me
+        Yes, I see the things that they wishin' on me
+        Hope I got some brothers that outlive me
+        They gon' tell the story, shit was different with me
+        God's plan, God's plan
+        I hold back, sometimes I won't, yeah
+        I feel good, sometimes I don't, ayy, don't
+        I finessed down Weston Road, ayy, 'nessed
+        Might go down a G-O-D, yeah, wait
+        I go hard on Southside G, yeah, Way
+        I make sure that north side eat
+        And still
+        Bad things
+        It's a lot of bad things
+        That they wishin' and wishin' and wishin' and wishin'
+        They wishin' on me
+        Bad things
+        It's a lot of bad things
+        That they wishin' and wishin' and wishin' and wishin'
+        They wishin' on me
+        Yeah, ayy, ayy (ayy)
+        She say, "Do you love me?" I tell her, "Only partly
+        I only love my bed and my momma, I'm sorry"
+        Fifty Dub, I even got it tatted on me
+        81, they'll bring the crashers to the party
+        And you know me
+        Turn the O2 into the O3, dog
+        Without 40, Oli', there'd be no me
+        'Magine if I never met the broskis
+        God's plan, God's plan
+        I can't do this on my own, ayy, no, ayy
+        Someone watchin' this shit close, yep, close
+        I've been me since Scarlett Road, ayy, road, ayy
+        Might go down as G-O-D, yeah, wait
+        I go hard on Southside G, ayy, Way
+        I make sure that north side eat, yuh
+        And still
+        Bad things
+        It's a lot of bad things
+        That they wishin' and wishin' and wishin' and wishin'
+        They wishin' on me
+        Yeah, yeah
+        Bad things
+        It's a lot of bad things
+        That they wishin' and wishin' and wishin' and wishin'
+        They wishin' on me
+        Yeah
+                    </p>
+                    </div>
+    
+                    {/* Comment Section */}
+                    <div className="col-md-6">
+                        {/* Social Media Style Comments */}
+                        <div className="d-flex align-items-start mb-4">
+                            <img 
+                                src="https://media.gettyimages.com/id/635359428/photo/new-york-ny-rumor-the-german-shepherd-poses-for-photos-after-winning-best-in-show-at-the.jpg?s=612x612&w=0&k=20&c=R8o1kV8KPl9z7QunBBgOHupjm_sY7n-U-7PFKKJZSC0=" 
+                                alt="User Avatar" 
+                                className="small-avatar me-3" 
+                            />
+                            <div className="border p-3 rounded w-100">
+                                <p className="mb-1"><strong>dude1:</strong> I really felt where (s)he said __________. I think that means ______</p>
+                                <small className="text-muted">5 minutes ago</small>
+                            </div>
+                        </div>
+                        <div className="d-flex align-items-start mb-4">
+                            <img 
+                                src="https://media.gettyimages.com/id/85438939/photo/a-soft-coated-wheaten-terrier-dog-named-zoey-waits-for-the-start-of-a-parade-at-the-woofstock.jpg?s=612x612&w=0&k=20&c=n644q3tfcbFR1qEPG51O15KUiF3pMrKl5zuIY4V7sjk=" 
+                                alt="User Avatar" 
+                                className="small-avatar me-3" 
+                            />
+                            <div className="border p-3 rounded w-100">
+                                <p className="mb-1"><strong>dude2:</strong> I really felt where (s)he said __________. I think that means ______</p>
+                                <small className="text-muted">10 minutes ago</small>
+                            </div>
+                        </div>
+                        {/* Comment Form */}
+                        <form>
+                            <div className="form-group mb-3">
+                                <textarea 
+                                    className="form-control" 
+                                    id="commentBox" 
+                                    name="commentBox" 
+                                    rows="4" 
+                                    placeholder="share what you think is behind the beat"
+                                ></textarea>
+                            </div>
+                            <div className="text-center">
+                                <input type="submit" className="btn btn-primary" value="Comment" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 };
 
