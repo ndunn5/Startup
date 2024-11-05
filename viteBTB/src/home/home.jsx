@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './home.css';
 import { Link } from 'react-router-dom';
-import { tSwift, billieEilish, drake, kendrickLamar } from './artists';
+import { TSwift, BillieEilish, Drake, KendrickLamar } from './artists';
 
 const Navbar = ({ resetArtist }) => {
   return (
@@ -35,14 +35,14 @@ export default function Home() {
 
   const renderArtistDetails = () => {
     switch (activeArtist) {
-      case 'tSwift':
-        return tSwift(); 
-      case 'billieEilish':
-        return billieEilish(); 
+      case 'TSwift':
+        return TSwift(); 
+      case 'BillieEilish':
+        return BillieEilish(); 
       case 'drake':
         return drake(); 
-      case 'kendrickLamar':
-        return kendrickLamar(); 
+      case 'KendrickLamar':
+        return KendrickLamar(); 
       default:
         return null; 
     }
@@ -96,7 +96,7 @@ export default function Home() {
           </div>
           <div className="carousel-inner">
             <div className="carousel-item active">
-              <a href="#" onClick={() => handleArtistClick('tSwift')}>
+              <a href="/TaylorSwift" onClick={() => handleArtistClick('TSwift')}>
                 <img
                   src="https://taylorpictures.net/albums/concerts/2024/theerastour/munichgermanyn1/normal_018.jpg"
                   className="d-block w-100"
@@ -108,7 +108,7 @@ export default function Home() {
               </a>
             </div>
             <div className="carousel-item">
-              <a href="#" onClick={() => handleArtistClick('billieEilish')}>
+              <a href="/BillieEilish" onClick={() => handleArtistClick('BillieEilish')}>
                 <img
                   src="https://media.gettyimages.com/id/2074591806/photo/hollywood-california-billie-eilish-attends-the-96th-annual-academy-awards-on-march-10-2024-in.jpg?s=612x612&w=0&k=20&c=o1nqk7KjPEFVUFe73NAhWGUWmZXjcS9wqPoLqov0leM="
                   className="d-block w-100"
@@ -120,7 +120,7 @@ export default function Home() {
               </a>
             </div>
             <div className="carousel-item">
-              <a href="#" onClick={() => handleArtistClick('drake')}>
+              <a href="/Drake" onClick={() => handleArtistClick('drake')}>
                 <img
                   src="https://media.gettyimages.com/id/1350328655/photo/long-beach-california-drake-speaks-onstage-during-drakes-till-death-do-us-part-rap-battle-on.jpg?s=612x612&w=0&k=20&c=RE45pkVPl_H2v-N-XBiav160y64fTvN75RwiLnQr75E="
                   className="d-block w-100"
@@ -132,7 +132,7 @@ export default function Home() {
               </a>
             </div>
             <div className="carousel-item">
-              <a href="#" onClick={() => handleArtistClick('kendrickLamar')}>
+              <a href="/KendrickLamar" onClick={() => handleArtistClick('KendrickLamar')}>
                 <img
                   src="https://media.gettyimages.com/id/611919442/photo/austin-tx-recording-artist-kendrick-lamar-performs-on-the-samsung-stage-during-day-two-at.jpg?s=612x612&w=0&k=20&c=6OK6C5MK9BVdgtc7G1icBemkXFQA4PsOQTkkjdgecmo="
                   className="d-block w-100"

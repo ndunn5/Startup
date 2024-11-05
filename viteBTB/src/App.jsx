@@ -5,6 +5,7 @@ import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import Home from './home/home';
 import About from './about/about';
 import Login from './login/login';
+import { TSwift, BillieEilish, Drake, KendrickLamar } from './home/artists';
 
 export default function App() {
   return (
@@ -51,7 +52,10 @@ export default function App() {
         <Routes>
           <Route path='/about' element={<About />} />
           <Route path='/home' element={<Home />} />
-          <Route path='/home/TaylorSwift' element={<tSwift />} />
+          <Route path='/TaylorSwift' element={<TSwift />} />
+          <Route path='/BillieEilish' element={<BillieEilish />} />
+          <Route path='/Drake' element={<Drake />} />
+          <Route path='/KendrickLamar' element={<KendrickLamar />} />
           <Route path='/login' element={<Login />} />
           <Route path='*' element={<NotFound />} />
         </Routes>

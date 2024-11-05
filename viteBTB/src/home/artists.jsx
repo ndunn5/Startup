@@ -2,7 +2,7 @@ import React from 'react';
 import './artists.css';
 import { blankSpace, cruelSummer, shakeItOff, lovely, blue, lunch, uMyEverything, oneDance, godsPlan, notLikeUs, moneyTrees, likeThat } from './songs';
 
-export const tSwift = () => {
+export const TSwift = () => {
     return (
         <>
             <header className="position-relative">
@@ -28,7 +28,7 @@ export const tSwift = () => {
     );
 };
 
-export const billieEilish = () => {
+export const BillieEilish = () => {
     return (
         <>
             <header className="position-relative">
@@ -54,7 +54,7 @@ export const billieEilish = () => {
     );
 };
 
-export const drake = () => {
+export const Drake = () => {
     return (
         <>
             <header className="position-relative">
@@ -80,7 +80,7 @@ export const drake = () => {
     );
 };
 
-export const kendrickLamar = () => {
+export const KendrickLamar = () => {
     return (
         <>
             <header className="position-relative">
@@ -105,3 +105,6 @@ export const kendrickLamar = () => {
         </>
     );
 };
+
+export default TSwift;
+
