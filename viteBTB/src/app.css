@@ -24,13 +24,17 @@ header {
 body {
     background-color: white !important;
 }
+.btn {
+    background-color: #d41010 !important;
+    border: #d41010 !important
+}
 
 .btn:hover {
-    background-color: #d41010;
+    background-color: #a30505 !important;
 }
 
 .btn:active, .btn:focus {
-    background-color: #d41010;
+    background-color: #d41010 !important;
     outline: none;             
     box-shadow: none;          
 }
