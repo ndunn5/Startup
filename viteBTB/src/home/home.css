@@ -1,5 +1,62 @@
-.container-fluid.bg-secondary.text-center {
-    /* Your styles here */
-    background-color: white !important; /* Force background color to white */
-    color: black; /* Example: changing text color to black */
+.carousel {
+    max-width: 800px;
+    max-height: 500px;
+    margin: 0 auto;
+    padding: 10px;
+    margin-bottom: 60px; 
+}
+.carousel-caption {
+    position: absolute;           
+    top: 5px;                   
+    left: 50%;                   
+    transform: translateX(-50%);
+    
+    color: white;                 
+    padding: 10px;               
+    border-radius: 5px;          
+    background-color: rgba(0, 0, 0, 0.5);           
+    max-width: 90%;    
+    max-height: 50px;          
+    
+    text-align: center;           
+    overflow: hidden;             
+    word-wrap: break-word;   
+}
+
+@media (max-width: 768px) {
+    .carousel-caption h5 {
+        font-size: 1.2rem;        
+    }
+
+    .carousel-caption {
+        position: absolute;           
+        top: 5px;                   
+        left: 50%;                   
+        transform: translateX(-50%);
+        
+        color: white;                 
+        padding: 10px;               
+        border-radius: 5px;          
+        background-color: rgba(0, 0, 0, 0.5);  
+        
+        max-width: 90%;              
+        width: auto;                 
+        height: auto;                
+        
+        text-align: center;           
+        overflow: hidden;              
+        word-wrap: break-word;         
+    }
+}
+
+@media (max-width: 576px) {
+    .carousel-caption h5 {
+        font-size: 1rem;          
+    }
+
+    .carousel-caption {
+        top: 5px;              
+        bottom: auto;         
+        padding: 6px;
+    }
 }

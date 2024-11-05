@@ -10,23 +10,15 @@ header {
     object-fit: cover; 
     border-radius: 50%; 
 }
-.btn {
-    background-color: #fc1111; 
-    color: white;              
-    padding: 10px 15px;         
-    border: none;               
-    border-radius: 5px;         
-    text-decoration: none;      
-    display: inline-block;      
-    cursor: pointer;            
-    transition: background-color 0.3s, box-shadow 0.3s;  
-}
 body {
     background-color: white !important;
 }
 .btn {
     background-color: #d41010 !important;
     border: #d41010 !important
+}
+main {
+    background-color: white !important;
 }
 
 .btn:hover {
@@ -41,68 +33,6 @@ body {
 body, header {
     margin: 0;
     padding: 0;
-}
-.carousel {
-    max-width: 800px;
-    max-height: 500px;
-    margin: 0 auto;
-    padding: 10px;
-    margin-bottom: 60px; 
-}
-.carousel-caption {
-    position: absolute;           
-    top: 5px;                   
-    left: 50%;                   
-    transform: translateX(-50%);
-    
-    color: white;                 
-    padding: 10px;               
-    border-radius: 5px;          
-    background-color: rgba(0, 0, 0, 0.5);           
-    max-width: 90%;    
-    max-height: 50px;          
-    
-    text-align: center;           
-    overflow: hidden;             
-    word-wrap: break-word;   
-}
-
-@media (max-width: 768px) {
-    .carousel-caption h5 {
-        font-size: 1.2rem;        
-    }
-
-    .carousel-caption {
-        position: absolute;           
-        top: 5px;                   
-        left: 50%;                   
-        transform: translateX(-50%);
-        
-        color: white;                 
-        padding: 10px;               
-        border-radius: 5px;          
-        background-color: rgba(0, 0, 0, 0.5);  
-        
-        max-width: 90%;              
-        width: auto;                 
-        height: auto;                
-        
-        text-align: center;           
-        overflow: hidden;              
-        word-wrap: break-word;         
-    }
-}
-
-@media (max-width: 576px) {
-    .carousel-caption h5 {
-        font-size: 1rem;          
-    }
-
-    .carousel-caption {
-        top: 5px;              
-        bottom: auto;         
-        padding: 6px;
-    }
 }
 
 .position-absolute.top-50.start-50.translate-middle.text-center.text-white {

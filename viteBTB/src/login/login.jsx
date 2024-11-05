@@ -1,8 +1,9 @@
 import React from 'react';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export default function Login() {
   return (
-    <main className='container-fluid bg-secondary text-center'>
+    <main className='container-fluid custom-bg text-center'>
       <div className="container mt-5">
         <form action="/action_page.php">
           <div className="mb-3 mt-3">

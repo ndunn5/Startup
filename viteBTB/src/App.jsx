@@ -43,7 +43,7 @@ export default function App() {
                 />
                 <button className='btn btn-primary' type='button'>Search</button>
               </form>
-              <NavLink to='/login' className='btn btn-primary'>Login</NavLink>
+              <NavLink to='/login' className='btn btn-primary' type='button' >Login</NavLink>
             </div>
           </div>
         </nav>

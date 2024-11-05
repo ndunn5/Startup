@@ -3,7 +3,7 @@ import './about.css'
 
 export default function About() {
   return (
-    <main className='container-fluid bg-secondary text-center'>
+    <main className='container-fluid custom-bg text-center'>
       <div>
         <header className="position-relative">
           <img 
