@@ -1,6 +1,6 @@
 import React from 'react';
 import './artists.css';
-import { blankSpace, cruelSummer, shakeItOff, lovely, blue, lunch, uMyEverything, oneDance, godsPlan, notLikeUs, moneyTrees, likeThat } from './songs';
+import { BlankSpace, CruelSummer, ShakeItOff, Lovely, Blue, Lunch, UMyEverything, OneDance, GodsPlan, NotLikeUs, MoneyTrees, LikeThat } from './songs';
 
 export const TSwift = () => {
     return (
@@ -19,9 +19,9 @@ export const TSwift = () => {
 
             <main>
                 <div className="list-group">
-                    <a href="/cruelSummer" onClick={cruelSummer} className="list-group-item list-group-item-action">Cruel Summer</a>
-                    <a href="/shakeItOff" onClick={shakeItOff} className="list-group-item list-group-item-action">Shake it Off</a>
-                    <a href="/blankSpace" onClick={blankSpace} className="list-group-item list-group-item-action">Blank Space</a>
+                    <a href="/cruelSummer" onClick={CruelSummer} className="list-group-item list-group-item-action">Cruel Summer</a>
+                    <a href="/shakeItOff" onClick={ShakeItOff} className="list-group-item list-group-item-action">Shake it Off</a>
+                    <a href="/blankSpace" onClick={BlankSpace} className="list-group-item list-group-item-action">Blank Space</a>
                 </div>
             </main>
         </>
@@ -45,9 +45,9 @@ export const BillieEilish = () => {
 
             <main className="container my-4">
                 <div className="list-group">
-                    <a href="/lovely" onClick={lovely} className="list-group-item list-group-item-action">Lovely</a>
-                    <a href="/blue" onClick={blue} className="list-group-item list-group-item-action">BLUE</a>
-                    <a href="/lunch" onClick={lunch} className="list-group-item list-group-item-action">LUNCH</a>
+                    <a href="/lovely" onClick={Lovely} className="list-group-item list-group-item-action">Lovely</a>
+                    <a href="/blue" onClick={Blue} className="list-group-item list-group-item-action">BLUE</a>
+                    <a href="/lunch" onClick={Lunch} className="list-group-item list-group-item-action">LUNCH</a>
                 </div>
             </main>
         </>
@@ -71,9 +71,9 @@ export const Drake = () => {
 
             <main className="container my-4">
                 <div className="list-group">
-                    <a href="/uMyEverything" onClick={uMyEverything} className="list-group-item list-group-item-action">U My Everything</a>
-                    <a href="/oneDance" onClick={oneDance} className="list-group-item list-group-item-action">One Dance</a>
-                    <a href="/godsPlan" onClick={godsPlan} className="list-group-item list-group-item-action">God's Plan</a>
+                    <a href="/uMyEverything" onClick={UMyEverything} className="list-group-item list-group-item-action">U My Everything</a>
+                    <a href="/oneDance" onClick={OneDance} className="list-group-item list-group-item-action">One Dance</a>
+                    <a href="/godsPlan" onClick={GodsPlan} className="list-group-item list-group-item-action">God's Plan</a>
                 </div>
             </main>
         </>
@@ -97,9 +97,9 @@ export const KendrickLamar = () => {
 
             <main className="container my-4">
                 <div className="list-group">
-                    <a href="/notLikeUs" onClick={notLikeUs} className="list-group-item list-group-item-action">Not Like Us</a>
-                    <a href="/moneyTrees" onClick={moneyTrees} className="list-group-item list-group-item-action">Money Trees</a>
-                    <a href="/likeThat" onClick={likeThat} className="list-group-item list-group-item-action">Like That</a>
+                    <a href="/notLikeUs" onClick={NotLikeUs} className="list-group-item list-group-item-action">Not Like Us</a>
+                    <a href="/moneyTrees" onClick={MoneyTrees} className="list-group-item list-group-item-action">Money Trees</a>
+                    <a href="/likeThat" onClick={LikeThat} className="list-group-item list-group-item-action">Like That</a>
                 </div>
             </main>
         </>

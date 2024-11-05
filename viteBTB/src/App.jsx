@@ -6,6 +6,8 @@ import Home from './home/home';
 import About from './about/about';
 import Login from './login/login';
 import { TSwift, BillieEilish, Drake, KendrickLamar } from './home/artists';
+import { BlankSpace, CruelSummer, ShakeItOff, Lovely, Blue, Lunch, UMyEverything, OneDance, GodsPlan, NotLikeUs, MoneyTrees, LikeThat } from './home/songs';
+
 
 export default function App() {
   return (
@@ -58,6 +60,18 @@ export default function App() {
           <Route path='/KendrickLamar' element={<KendrickLamar />} />
           <Route path='/login' element={<Login />} />
           <Route path='*' element={<NotFound />} />
+          <Route path='/blankSpace' element={<BlankSpace />} />
+          <Route path='/cruelSummer' element={<CruelSummer />} />
+          <Route path='/shakeItOff' element={<ShakeItOff />} />
+          <Route path='/lovely' element={<Lovely />} />
+          <Route path='/blue' element={<Blue />} />
+          <Route path='/lunch' element={<Lunch />} />
+          <Route path='/uMyEverything' element={<UMyEverything />} />
+          <Route path='/oneDance' element={<OneDance />} />
+          <Route path='/godsPlan' element={<GodsPlan />} />
+          <Route path='/notLikeUs' element={<NotLikeUs />} />
+          <Route path='/moneyTrees' element={<MoneyTrees />} />
+          <Route path='/likeThat' element={<LikeThat />} />
         </Routes>
         
         <footer className='custom-footer text-white text-center text-lg-start mt-4'>
