@@ -92,7 +92,7 @@ For this deliverable, I built out the style of my application using CSS.
 For this deliverable, I built out the functionality and structure of my application using React.
 
 - [x] Component-Based Architecture - The application is structured with reusable components, each managing its own logic and style, which makes the application modular and easier to maintain.
-- [x]State Management - State is managed using React's useState and useEffect hooks, allowing for dynamic data updates and side effects (e.g., data fetching and event handling) to be managed effectively within each component.
+- [x] State Management - State is managed using React's useState and useEffect hooks, allowing for dynamic data updates and side effects (e.g., data fetching and event handling) to be managed effectively within each component.
 - [x] Props Passing - Data is passed between components using props, enabling components to receive and display dynamic information, ensuring consistency across the application.
 - [x] Conditional Rendering - Components are rendered conditionally based on the state, allowing the application to display appropriate messages, loading indicators, or alternative views when data is unavailable.
 - [x] Event Handling - Interactive functionality is implemented through event handlers on buttons, forms, and other UI elements, allowing for responsive and seamless user interaction throughout the application.
