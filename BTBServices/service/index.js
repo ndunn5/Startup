@@ -1,8 +1,11 @@
 const express = require('express');
-const axios = require('axios'); 
+const axios = require('axios');
+const cors = require('cors'); 
 const app = express();
 
 const port = process.argv.length > 2 ? process.argv[2] : 3000;
+
+app.use(cors()); 
 
 app.use(express.static('public'));
 
@@ -19,7 +22,13 @@ apiRouter.get('/random-song', async (_req, res) => {
     }
 
     const randomSong = songs[Math.floor(Math.random() * songs.length)];
-    res.send(randomSong);
+
+    const songDetails = {
+      title: randomSong.title,
+      artist: randomSong.artist
+    };
+
+    res.send(songDetails);
   } catch (error) {
     console.error('Error fetching songs:', error);
     res.status(500).send({ msg: 'Failed to fetch songs' });
@@ -31,5 +40,5 @@ app.use((_req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+  console.log(`Server is running at http://localhost:${port}`);
 });
