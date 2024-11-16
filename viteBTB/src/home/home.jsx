@@ -39,8 +39,8 @@ export default function Home() {
         return TSwift(); 
       case 'BillieEilish':
         return BillieEilish(); 
-      case 'drake':
-        return drake(); 
+      case 'Drake':
+        return Drake(); 
       case 'KendrickLamar':
         return KendrickLamar(); 
       default:
@@ -120,7 +120,7 @@ export default function Home() {
               </a>
             </div>
             <div className="carousel-item">
-              <a href="/Drake" onClick={() => handleArtistClick('drake')}>
+              <a href="/Drake" onClick={() => handleArtistClick('Drake')}>
                 <img
                   src="https://media.gettyimages.com/id/1350328655/photo/long-beach-california-drake-speaks-onstage-during-drakes-till-death-do-us-part-rap-battle-on.jpg?s=612x612&w=0&k=20&c=RE45pkVPl_H2v-N-XBiav160y64fTvN75RwiLnQr75E="
                   className="d-block w-100"

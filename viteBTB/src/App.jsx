@@ -52,6 +52,7 @@ export default function App() {
         </nav>
 
         <Routes>
+          <Route path='' element={<Home />} />
           <Route path='/about' element={<About />} />
           <Route path='/home' element={<Home />} />
           <Route path='/TaylorSwift' element={<TSwift />} />
