@@ -50,7 +50,7 @@ export default function App() {
                 <input
                   className='form-control me-2'
                   type='text'
-                  placeholder={song ? `Try "${song.title}" by ${song.artist}` : 'Loading...'}
+                  placeholder={song ? `search "${song.title}" by ${song.artist}` : 'Loading...'}
                 />
                 <button className='btn btn-primary' type='button'>Search</button>
               </form>

@@ -1,23 +1,35 @@
-async function displayRandomSong() {
-    try {
-      const response = await fetch("https://energy.ch/api/channels/bern/playouts"); 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const songs = await response.json();
-  
-      const randomSong = songs[Math.floor(Math.random() * songs.length)];
-  
-      const songTitleElement = document.getElementById("song-title");
-      const artistElement = document.getElementById("artist");
-      
-      songTitleElement.textContent = `Title: ${randomSong.title}`;
-      artistElement.textContent = `Artist: ${randomSong.artist}`;
-    } catch (error) {
-      console.error("Error fetching or displaying data:", error);
+const express = require('express');
+const axios = require('axios'); 
+const app = express();
+
+const port = process.argv.length > 2 ? process.argv[2] : 3000;
+
+app.use(express.static('public'));
+
+var apiRouter = express.Router();
+app.use('/api', apiRouter);
+
+apiRouter.get('/random-song', async (_req, res) => {
+  try {
+    const response = await axios.get('https://energy.ch/api/channels/bern/playouts');
+    const songs = response.data;
+
+    if (!songs || songs.length === 0) {
+      return res.status(404).send({ msg: 'No songs found' });
     }
+
+    const randomSong = songs[Math.floor(Math.random() * songs.length)];
+    res.send(randomSong);
+  } catch (error) {
+    console.error('Error fetching songs:', error);
+    res.status(500).send({ msg: 'Failed to fetch songs' });
   }
-  
-  window.onload = displayRandomSong;
-  
+});
+
+app.use((_req, res) => {
+  res.sendFile('index.html', { root: 'public' });
+});
+
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`);
+});
