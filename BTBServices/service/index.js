@@ -7,9 +7,7 @@ const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
 app.use(cors()); 
 
-// app.use(express.static('../public'));
-const path = require('path');
-app.use(express.static(path.join(__dirname, '../public'))); 
+app.use(express.static('../public'));
 
 var apiRouter = express.Router();
 app.use('/api', apiRouter);
@@ -41,6 +39,6 @@ app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });
 });
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+app.listen(4000, () => {
+  console.log('Server is running at http://localhost:4000');
 });
