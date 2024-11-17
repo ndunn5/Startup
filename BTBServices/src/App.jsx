@@ -12,7 +12,7 @@ export default function App() {
   const [song, setSong] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/random-song')
+    fetch('http://localhost:4000/api/random-song')
       .then((response) => response.json())
       .then((data) => setSong(data))
       .catch((error) => console.error('Error fetching song:', error));

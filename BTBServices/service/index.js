@@ -3,11 +3,13 @@ const axios = require('axios');
 const cors = require('cors'); 
 const app = express();
 
-const port = process.argv.length > 2 ? process.argv[2] : 3000;
+const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
 app.use(cors()); 
 
-app.use(express.static('public'));
+// app.use(express.static('../public'));
+const path = require('path');
+app.use(express.static(path.join(__dirname, '../public'))); 
 
 var apiRouter = express.Router();
 app.use('/api', apiRouter);
