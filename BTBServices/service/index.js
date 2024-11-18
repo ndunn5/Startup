@@ -29,7 +29,7 @@ apiRouter.get('/random-song', async (_req, res) => {
       artist: randomSong.artist
     };
 
-    res.send(songDetails);
+    return res.send(songDetails);
   } catch (error) {
     console.error('Error fetching songs:', error);
     res.status(500).send({ msg: 'Failed to fetch songs' });
