@@ -98,3 +98,11 @@ For this deliverable, I built out the functionality and structure of my applicat
 - [x] Event Handling - Interactive functionality is implemented through event handlers on buttons, forms, and other UI elements, allowing for responsive and seamless user interaction throughout the application.
 - [x] Form Handling - Forms are created with state-bound inputs to capture and process user input efficiently, improving the user experience by providing real-time feedback.
 
+## Services Deliverable
+
+For this deliverable, I built out the functionality and structure of my application using and API.
+
+- [x] I learned how to access APIs for free.
+- [x]I leaned more javascript.
+- [x] I learned how back end listening works including fetch calls.
+- [x]I learned how to deploy multiple frameworks and use multiple terminals for front end and back end.
