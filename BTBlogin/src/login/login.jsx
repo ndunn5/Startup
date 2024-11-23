@@ -1,5 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import './login.css';
 import { Unauthenticated } from './unauthenticated';
 import { Authenticated } from './authenticated';
 import { AuthState } from './authState';
@@ -8,7 +9,7 @@ export default function Login({ userName, authState, onAuthChange }) {
   console.log('authState:', authState, 'userName:', userName);
 
   return (
-    <main className='container-fluid bg-secondary text-center white background'>
+    <main className='container-fluid text-center white background'>
       <div>
         {authState === AuthState.Unknown && <h1>Loading...</h1>}
         {authState !== AuthState.Unknown && <h1>Login</h1>}
