@@ -11,7 +11,7 @@ export default function Login({ userName, authState, onAuthChange }) {
   return (
     <main className='container-fluid text-center white background'>
       <div>
-        {authState !== AuthState.Unknown && <h1>Login</h1>}
+      {authState === AuthState.Unauthenticated && <h1>Login</h1>}
         {authState === AuthState.Authenticated && (
   <>
     <h1>Welcome!</h1>
