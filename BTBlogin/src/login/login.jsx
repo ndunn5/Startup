@@ -11,14 +11,16 @@ export default function Login({ userName, authState, onAuthChange }) {
   return (
     <main className='container-fluid text-center white background'>
       <div>
-        {authState === AuthState.Unknown && <h1>Loading...</h1>}
         {authState !== AuthState.Unknown && <h1>Login</h1>}
         {authState === AuthState.Authenticated && (
-          <Authenticated
-            userName={userName}
-            onLogout={() => onAuthChange(userName, AuthState.Unauthenticated)}
-          />
-        )}
+  <>
+    <h1>Welcome!</h1>
+    <Authenticated
+      userName={userName}
+      onLogout={() => onAuthChange(userName, AuthState.Unauthenticated)}
+    />
+  </>
+)}
         {authState === AuthState.Unauthenticated && (
           <Unauthenticated
             userName={userName}
