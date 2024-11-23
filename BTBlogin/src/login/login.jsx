@@ -1,27 +1,36 @@
 import React from 'react';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { Unauthenticated } from './unauthenticated';
+import { Authenticated } from './authenticated';
+import { AuthState } from './authState';
 
-export default function Login() {
+export default function Login({ userName, authState, onAuthChange }) {
+  console.log('authState:', authState, 'userName:', userName);
+
   return (
-    <main className='container-fluid custom-bg text-center'>
-      <div className="container mt-5">
-        <form action="/action_page.php">
-          <div className="mb-3 mt-3">
-            <label htmlFor="email" className="form-label">Email:</label>
-            <input type="email" className="form-control" id="email" placeholder="Enter email" name="email" />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="pwd" className="form-label">Password:</label>
-            <input type="password" className="form-control" id="pwd" placeholder="Enter password" name="pswd" />
-          </div>
-          <div className="form-check mb-3">
-            <label className="form-check-label">
-              <input className="form-check-input" type="checkbox" name="remember" /> Remember me
-            </label>
-          </div>
-          <button type="submit" className="btn btn-primary">Submit</button>
-        </form>
+    <main className='container-fluid bg-secondary text-center white background'>
+      <div>
+        {authState === AuthState.Unknown && <h1>Loading...</h1>}
+        {authState !== AuthState.Unknown && <h1>Login</h1>}
+        {authState === AuthState.Authenticated && (
+          <Authenticated
+            userName={userName}
+            onLogout={() => onAuthChange(userName, AuthState.Unauthenticated)}
+          />
+        )}
+        {authState === AuthState.Unauthenticated && (
+          <Unauthenticated
+            userName={userName}
+            onLogin={(loginUserName) => onAuthChange(loginUserName, AuthState.Authenticated)}
+          />
+        )}
+        {authState !== AuthState.Authenticated &&
+          authState !== AuthState.Unauthenticated &&
+          authState !== AuthState.Unknown && (
+            <h1>Error: Invalid authentication state</h1>
+          )}
       </div>
     </main>
   );
 }
+

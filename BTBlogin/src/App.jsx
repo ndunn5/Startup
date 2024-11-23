@@ -5,11 +5,15 @@ import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import Home from './home/home';
 import About from './about/about';
 import Login from './login/login';
+import { AuthState } from './login/authState';
 import { TSwift, BillieEilish, Drake, KendrickLamar } from './home/artists';
 import { BlankSpace, CruelSummer, ShakeItOff, Lovely, Blue, Lunch, UMyEverything, OneDance, GodsPlan, NotLikeUs, MoneyTrees, LikeThat } from './home/songs';
 
 export default function App() {
   const [song, setSong] = useState(null);
+  const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
+  const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
+  const [authState, setAuthState] = React.useState(currentAuthState);
 
   useEffect(() => {
     fetch('/api/random-song')
@@ -60,6 +64,20 @@ export default function App() {
         </nav>
 
         <Routes>
+          {/* <Route
+            path='/'
+            element={
+              <Login
+                userName={userName}
+                authState={authState}
+                onAuthChange={(userName, authState) => {
+                  setAuthState(authState);
+                  setUserName(userName);
+                }}
+              />
+            }
+            exact
+          /> */}
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/home" element={<Home />} />
@@ -67,7 +85,20 @@ export default function App() {
           <Route path="/BillieEilish" element={<BillieEilish />} />
           <Route path="/Drake" element={<Drake />} />
           <Route path="/KendrickLamar" element={<KendrickLamar />} />
-          <Route path="/login" element={<Login />} />
+          <Route
+  path="/login"
+  element={
+    <Login
+      userName={userName}
+      authState={authState}
+      onAuthChange={(userName, authState) => {
+        setAuthState(authState);
+        setUserName(userName);
+      }}
+    />
+  }
+/>
+
           <Route path="*" element={<NotFound />} />
           <Route path="/blankSpace" element={<BlankSpace />} />
           <Route path="/cruelSummer" element={<CruelSummer />} />
