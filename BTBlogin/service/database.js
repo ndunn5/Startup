@@ -4,7 +4,7 @@ const uuid = require('uuid');
 const config = require('./dbConfig.json');
 
 const url = `mongodb+srv://BehindTheBeat:ndunn5@cluster0.t5wlr.mongodb.net/`;
-const client = new MongoClient(url);
+const client = new MongoClient(url, { tls: true, serverSelectionTimeoutMS: 3000, autoSelectFamily: false, });
 const db = client.db('startup');
 const userCollection = db.collection('user');
 
