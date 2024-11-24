@@ -3,6 +3,6 @@ import './favorites.css'
 
 export default function Favorites() {
   return (
-    <p>favorites baby</p>
+    <h1>favorites</h1>
   );
 }
