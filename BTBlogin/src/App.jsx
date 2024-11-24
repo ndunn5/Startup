@@ -47,6 +47,11 @@ export default function App() {
                 <li className='nav-item'>
                   <NavLink className='nav-link' to='/home'>Home</NavLink>
                 </li>
+                {authState === AuthState.Authenticated && (
+                <li className='nav-item'>
+                  <NavLink className='nav-link' to='/favorites'>favorites</NavLink>
+                </li>
+              )}
               </ul>
             </div>
 
@@ -99,6 +104,7 @@ export default function App() {
           <Route path="/notLikeUs" element={<NotLikeUs />} />
           <Route path="/moneyTrees" element={<MoneyTrees />} />
           <Route path="/likeThat" element={<LikeThat />} />
+          <Route path="/favorites" element={<Favorites />} />
         </Routes>
 
         <footer className='custom-footer text-white text-center text-lg-start mt-4'>
