@@ -18,42 +18,6 @@ app.use(express.static('public'));
 var apiRouter = express.Router();
 app.use('/api', apiRouter);
 
-// Public route: no authentication required
-apiRouter.get('/random-song', async (_req, res) => {
-  try {
-    const response = await axios.get('https://energy.ch/api/channels/bern/playouts');
-    const songs = response.data;
-    console.log('Fetching data from API...');
-
-    if (!songs || songs.length === 0) {
-      return res.status(404).send({ msg: 'No songs found' });
-    }
-
-    const randomSong = songs[Math.floor(Math.random() * songs.length)];
-
-    const songDetails = {
-      title: randomSong.title,
-      artist: randomSong.artist,
-    };
-
-    return res.send(songDetails);
-  } catch (error) {
-    console.error('Error fetching songs:', error);
-    res.status(500).send({ msg: 'Failed to fetch songs' });
-  }
-});
-
-// Authentication middleware for secured routes
-apiRouter.use(async (req, res, next) => {
-  const authToken = req.cookies[authCookieName];
-  const user = await DB.getUserByToken(authToken);
-  if (user) {
-    next();
-  } else {
-    res.status(401).send({ msg: 'Unauthorized' });
-  }
-});
-
 // Authentication routes
 apiRouter.post('/auth/create', async (req, res) => {
   if (await DB.getUser(req.body.email)) {
@@ -80,6 +44,47 @@ apiRouter.post('/auth/login', async (req, res) => {
 apiRouter.delete('/auth/logout', (_req, res) => {
   res.clearCookie(authCookieName);
   res.status(204).end();
+});
+
+// Authentication middleware (applies only to secured routes)
+async function requireAuth(req, res, next) {
+  const authToken = req.cookies[authCookieName];
+  const user = await DB.getUserByToken(authToken);
+  if (user) {
+    next();
+  } else {
+    res.status(401).send({ msg: 'Unauthorized' });
+  }
+}
+
+// Example route: Fetch a random song (no authentication required)
+apiRouter.get('/random-song', async (_req, res) => {
+  try {
+    const response = await axios.get('https://energy.ch/api/channels/bern/playouts');
+    const songs = response.data;
+    console.log('Fetching data from API...');
+
+    if (!songs || songs.length === 0) {
+      return res.status(404).send({ msg: 'No songs found' });
+    }
+
+    const randomSong = songs[Math.floor(Math.random() * songs.length)];
+
+    const songDetails = {
+      title: randomSong.title,
+      artist: randomSong.artist
+    };
+
+    return res.send(songDetails);
+  } catch (error) {
+    console.error('Error fetching songs:', error);
+    res.status(500).send({ msg: 'Failed to fetch songs' });
+  }
+});
+
+// Secured example route (requires authentication)
+apiRouter.get('/secure-data', requireAuth, async (_req, res) => {
+  res.send({ msg: 'This is secured data only visible to logged-in users.' });
 });
 
 // Default catch-all for unknown routes
