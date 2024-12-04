@@ -506,6 +506,12 @@ export const Blue = () => {
 
     // Retrieve the logged-in username from localStorage
     const userName = localStorage.getItem('userName');
+    
+    // Track the user's likes locally to prevent multiple likes
+    const [userLikes, setUserLikes] = useState(() => {
+        const savedLikes = localStorage.getItem('userLikes');
+        return savedLikes ? JSON.parse(savedLikes) : {};
+    });
 
     // WebSocket connection for comments
     useEffect(() => {
@@ -528,7 +534,31 @@ export const Blue = () => {
             // Handling deletion of comments
             if (messageData.type === 'delete') {
                 setComments((prevComments) => {
-                    return prevComments.filter(comment => comment.id !== messageData.commentId);
+                    const updatedComments = prevComments.filter(comment => comment.id !== messageData.commentId);
+                    // Update localStorage with the remaining comments
+                    localStorage.setItem('comments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+            }
+
+            // Handling likes update
+            if (messageData.type === 'like') {
+                setComments((prevComments) => {
+                    const updatedComments = prevComments.map((comment) => {
+                        if (comment.id === messageData.commentId) {
+                            return { ...comment, likes: comment.likes + 1 };
+                        }
+                        return comment;
+                    });
+                    // Store the updated comments in localStorage
+                    localStorage.setItem('comments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+                // Update userLikes to reflect the liked comment
+                setUserLikes((prevLikes) => {
+                    const updatedLikes = { ...prevLikes, [messageData.commentId]: true };
+                    localStorage.setItem('userLikes', JSON.stringify(updatedLikes));
+                    return updatedLikes;
                 });
             }
         };
@@ -564,30 +594,57 @@ export const Blue = () => {
 
     // Handle liking a comment
     const handleLike = (commentId) => {
-        setComments((prevComments) => 
-            prevComments.map((comment) =>
-                comment.id === commentId
-                    ? { ...comment, likes: comment.likes + 1 } // Increment likes
-                    : comment
-            )
-        );
+        if (!userName) {
+            alert('You must be logged in to like a comment');
+            return;
+        }
+
+        // Prevent a user from liking a comment multiple times
+        if (userLikes[commentId]) {
+            alert('You can only like a comment once');
+            return;
+        }
+
+        // Send the like message to the WebSocket server
+        const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
+        ws.onopen = () => {
+            ws.send(JSON.stringify({
+                type: 'like',
+                commentId: commentId, // Send the comment ID to increment likes
+            }));
+        };
     };
 
     // Handle deleting a comment
     const handleDelete = (commentId) => {
-        // Send the delete message to the WebSocket server
-        const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
-        ws.onopen = () => {
-            ws.send(JSON.stringify({
-                type: 'delete',
-                commentId: commentId, // Send the comment ID to delete
-            }));
-        };
+        if (!userName) {
+            alert('You must be logged in to delete a comment');
+            return;
+        }
 
-        // Optimistically remove the comment from local state
-        setComments((prevComments) => 
-            prevComments.filter((comment) => comment.id !== commentId) // Remove the comment with the matching id
-        );
+        // Find the comment to check if the logged-in user is the owner
+        const comment = comments.find(comment => comment.id === commentId);
+
+        if (comment && comment.username === userName) {
+            // Send the delete message to the WebSocket server
+            const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    type: 'delete',
+                    commentId: commentId, // Send the comment ID to delete
+                }));
+            };
+
+            // Optimistically remove the comment from local state
+            setComments((prevComments) => {
+                const updatedComments = prevComments.filter((comment) => comment.id !== commentId);
+                // Update localStorage with the remaining comments
+                localStorage.setItem('comments', JSON.stringify(updatedComments));
+                return updatedComments;
+            });
+        } else {
+            alert('You can only delete your own comments');
+        }
     };
 
     return (
@@ -639,7 +696,7 @@ export const Blue = () => {
                 {/* Display Comments Section */}
                 <div className="row">
                     <div className="col-md-12">
-                        {comments.map((comment, index) => (
+                        {comments.map((comment) => (
                             <div className="d-flex align-items-start mb-4" key={comment.id}>
                                 <img
                                     src="https://via.placeholder.com/50"
@@ -660,12 +717,14 @@ export const Blue = () => {
                                         </button>
                                         
                                         {/* Delete Button */}
-                                        <button 
-                                            className="btn btn-sm btn-outline-danger"
-                                            onClick={() => handleDelete(comment.id)}
-                                        >
-                                            🗑️ Delete
-                                        </button>
+                                        {comment.username === userName && (
+                                            <button 
+                                                className="btn btn-sm btn-outline-danger"
+                                                onClick={() => handleDelete(comment.id)}
+                                            >
+                                                🗑️ Delete
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </div>
