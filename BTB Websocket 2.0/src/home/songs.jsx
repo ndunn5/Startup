@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './songs.css';
 
+const userName = localStorage.getItem('userName');
+
 //taylor swift
 export const BlankSpace = () => {
     return (
@@ -402,7 +404,6 @@ export const ShakeItOff = () => {
         </>
     );
 };
-//Billie Eilish
 export const Lovely = () => {
     return (
         <>
@@ -503,20 +504,31 @@ export const Blue = () => {
     });
     const [newComment, setNewComment] = useState('');
 
+    // Retrieve the logged-in username from localStorage
+    const userName = localStorage.getItem('userName');
+
     // WebSocket connection for comments
     useEffect(() => {
         const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
 
-        // Listen for incoming comment messages
+        // Listen for incoming messages
         ws.onmessage = (event) => {
             const messageData = JSON.parse(event.data);
 
+            // Handling incoming comment messages
             if (messageData.type === 'comment') {
                 setComments((prevComments) => {
                     const updatedComments = [...prevComments, messageData.comment];
                     // Store the updated comments in localStorage
                     localStorage.setItem('comments', JSON.stringify(updatedComments));
                     return updatedComments;
+                });
+            }
+
+            // Handling deletion of comments
+            if (messageData.type === 'delete') {
+                setComments((prevComments) => {
+                    return prevComments.filter(comment => comment.id !== messageData.commentId);
                 });
             }
         };
@@ -530,13 +542,52 @@ export const Blue = () => {
     const handleCommentSubmit = (e) => {
         e.preventDefault();
         if (newComment.trim()) {
+            // Create a comment object with the username and message
+            const commentData = {
+                type: 'comment',
+                comment: {
+                    username: userName ? userName : 'User',
+                    text: newComment,
+                    likes: 0, // Initial likes count
+                    id: Date.now(), // Unique ID for the comment
+                }
+            };
+
             // Send the comment to the WebSocket server
             const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
             ws.onopen = () => {
-                ws.send(JSON.stringify({ type: 'comment', comment: newComment }));
+                ws.send(JSON.stringify(commentData)); // Send the comment with the username
                 setNewComment(''); // Clear the input field after sending the comment
             };
         }
+    };
+
+    // Handle liking a comment
+    const handleLike = (commentId) => {
+        setComments((prevComments) => 
+            prevComments.map((comment) =>
+                comment.id === commentId
+                    ? { ...comment, likes: comment.likes + 1 } // Increment likes
+                    : comment
+            )
+        );
+    };
+
+    // Handle deleting a comment
+    const handleDelete = (commentId) => {
+        // Send the delete message to the WebSocket server
+        const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
+        ws.onopen = () => {
+            ws.send(JSON.stringify({
+                type: 'delete',
+                commentId: commentId, // Send the comment ID to delete
+            }));
+        };
+
+        // Optimistically remove the comment from local state
+        setComments((prevComments) => 
+            prevComments.filter((comment) => comment.id !== commentId) // Remove the comment with the matching id
+        );
     };
 
     return (
@@ -555,7 +606,7 @@ export const Blue = () => {
                             {/* Add the lyrics here */}
                             Mm, mm, mm
                             I try to live in black and white, but I'm so blue
-                            {/* Add the rest of the song lyrics here */}
+                            {/* ... */}
                         </p>
                     </div>
                 </div>
@@ -589,14 +640,33 @@ export const Blue = () => {
                 <div className="row">
                     <div className="col-md-12">
                         {comments.map((comment, index) => (
-                            <div className="d-flex align-items-start mb-4" key={index}>
+                            <div className="d-flex align-items-start mb-4" key={comment.id}>
                                 <img
                                     src="https://via.placeholder.com/50"
                                     alt="User Avatar"
                                     className="small-avatar me-3"
                                 />
                                 <div className="border p-3 rounded w-100">
-                                    <p className="mb-1"><strong>User:</strong> {comment}</p>
+                                    <p className="mb-1">
+                                        <strong>{comment.username}:</strong> {comment.text}
+                                    </p>
+                                    <div className="d-flex justify-content-between">
+                                        {/* Like Button */}
+                                        <button 
+                                            className="btn btn-sm btn-outline-primary"
+                                            onClick={() => handleLike(comment.id)}
+                                        >
+                                            👍 {comment.likes}
+                                        </button>
+                                        
+                                        {/* Delete Button */}
+                                        <button 
+                                            className="btn btn-sm btn-outline-danger"
+                                            onClick={() => handleDelete(comment.id)}
+                                        >
+                                            🗑️ Delete
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         ))}

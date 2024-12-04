@@ -1,8 +1,8 @@
-// Adjust the webSocket protocol to what is being used for HTTP
+// Adjust the WebSocket protocol to what is being used for HTTP
 const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
 const socket = new WebSocket(`${protocol}://${window.location.host}/ws`);
 
-// Display that we have opened the webSocket
+// Display that we have opened the WebSocket
 socket.onopen = (event) => {
   appendMsg('system', 'websocket', 'connected');
 };
@@ -11,25 +11,32 @@ socket.onopen = (event) => {
 socket.onmessage = async (event) => {
   const text = await event.data.text();
   const chat = JSON.parse(text);
+  // We assume the server sends both 'name' and 'msg'
   appendMsg('friend', chat.name, chat.msg);
 };
 
-// If the webSocket is closed then disable the interface
+// If the WebSocket is closed, then disable the interface
 socket.onclose = (event) => {
   appendMsg('system', 'websocket', 'disconnected');
   document.querySelector('#name-controls').disabled = true;
   document.querySelector('#chat-controls').disabled = true;
 };
 
-// Send a message over the webSocket
+// Send a message over the WebSocket
 function sendMessage() {
   const msgEl = document.querySelector('#new-msg');
   const msg = msgEl.value;
   if (!!msg) {
-    appendMsg('me', 'me', msg);
+    appendMsg('me', 'me', msg); // Display the message locally for the sender
     const name = document.querySelector('#my-name').value;
-    socket.send(`{"name":"${name}", "msg":"${msg}"}`);
-    msgEl.value = '';
+    
+    // Send the message along with the username
+    socket.send(JSON.stringify({
+      name: name,  // Send the username
+      msg: msg     // Send the message
+    }));
+    
+    msgEl.value = '';  // Clear the input field after sending the message
   }
 }
 
@@ -38,7 +45,7 @@ function appendMsg(cls, from, msg) {
   const chatText = document.querySelector('#chat-text');
   const chatEl = document.createElement('div');
   chatEl.innerHTML = `<span class="${cls}">${from}</span>: ${msg}</div>`;
-  chatText.prepend(chatEl);
+  chatText.prepend(chatEl);  // Prepend so new messages show up at the top
 }
 
 // Send message on enter keystroke
