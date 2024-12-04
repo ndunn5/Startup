@@ -494,26 +494,30 @@ export const Lovely = () => {
     );
 };
 
-export const Blue = () => {
-    const [comments, setComments] = useState([]);
-    const [newComment, setNewComment] = useState('');
-    const [chatMessage, setChatMessage] = useState('');
-    const [chatLog, setChatLog] = useState([]);
 
-    // WebSocket connection for comments and chat
+export const Blue = () => {
+    const [comments, setComments] = useState(() => {
+        // Retrieve stored comments from localStorage, if any
+        const savedComments = localStorage.getItem('comments');
+        return savedComments ? JSON.parse(savedComments) : [];
+    });
+    const [newComment, setNewComment] = useState('');
+
+    // WebSocket connection for comments
     useEffect(() => {
         const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
 
-        // Listen for incoming chat messages
+        // Listen for incoming comment messages
         ws.onmessage = (event) => {
             const messageData = JSON.parse(event.data);
 
-            if (messageData.type === 'chat') {
-                setChatLog((prevChatLog) => [...prevChatLog, messageData.message]);
-            }
-
             if (messageData.type === 'comment') {
-                setComments((prevComments) => [...prevComments, messageData.comment]);
+                setComments((prevComments) => {
+                    const updatedComments = [...prevComments, messageData.comment];
+                    // Store the updated comments in localStorage
+                    localStorage.setItem('comments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
             }
         };
 
@@ -522,17 +526,6 @@ export const Blue = () => {
             ws.close();
         };
     }, []);
-
-    const sendMessage = () => {
-        if (chatMessage.trim()) {
-            // Send chat message to the WebSocket server
-            const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
-            ws.onopen = () => {
-                ws.send(JSON.stringify({ type: 'chat', message: chatMessage }));
-                setChatMessage(''); // Clear the input field after sending the message
-            };
-        }
-    };
 
     const handleCommentSubmit = (e) => {
         e.preventDefault();
@@ -561,56 +554,8 @@ export const Blue = () => {
                         <p className="text-center">
                             {/* Add the lyrics here */}
                             Mm, mm, mm
-I try to live in black and white, but I'm so blue
-I'd like to mean it when I say I'm over you
-But that's still not true (blue)
-And I'm still so blue, oh
-I thought we were the same (I thought we were the same)
-Birds of a feather (birds of a feather), now I'm ashamed
-I told you a lie, désolé, mon amour
-I'm trying my best, don't know what's in store
-Open up the door (blue)
-In the back of my mind, I'm still overseas
-A bird in a cage, thought you were made for me
-I try (I'm not what) to live in black and white
-But I'm so blue (but I'm not what you need)
-I'd like (not what you need) to mean it when I say I'm over you
-But that's still not true, true
-And I'm still so blue (and it's not true)
-I'm true blue, true blue
-I'm true blue
-mm, mm, mm
-Ah-ah
-Ah-ah-ah-ah
-Ah-ah
-You were born bluer than a butterfly
-Beautiful and so deprived of oxygen
-Colder than your father's eyes
-He never learned to sympathize with anyone
-I don't blame you
-But I can't change you
-Don't hate you (don't hate you)
-But we can't save you (but we can't save you)
-You were born reaching for your mother's hands
-Victim of your father's plans to rule the world
-Too afraid to step outside
-Paranoid and petrified of what you've heard
-But they could say the same 'bout me
-I sleep 'bout three hours each night
-Means only 21 a week now, now
-And I could say the same 'bout you
-Born blameless, grew up famous too
-Just a baby born blue now, now
-I don't blame you (I don't blame you)
-But I can't change you
-Don't hate you
-But we can't save you (we can't save you)
-Ooh-ooh
-It's over now
-It's over now
-It's over now
-(Ah-ah-ah, ah)
-But when can I hear the next one?
+                            I try to live in black and white, but I'm so blue
+                            {/* Add the rest of the song lyrics here */}
                         </p>
                     </div>
                 </div>
@@ -628,7 +573,13 @@ But when can I hear the next one?
                                 onChange={(e) => setNewComment(e.target.value)}
                             />
                             <div className="text-center mt-3">
-                            <button type="submit" onClick={handleCommentSubmit} className="btn btn-primary comment">Post Comment</button>
+                                <button
+                                    type="submit"
+                                    onClick={handleCommentSubmit}
+                                    className="btn btn-primary comment"
+                                >
+                                    Post Comment
+                                </button>
                             </div>
                         </fieldset>
                     </div>
@@ -651,8 +602,7 @@ But when can I hear the next one?
                         ))}
                     </div>
                 </div>
-
-                    </div>
+            </div>
         </>
     );
 };
