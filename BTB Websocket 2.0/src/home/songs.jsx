@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-
-
+import './songs.css';
 
 //taylor swift
 export const BlankSpace = () => {
@@ -137,7 +135,7 @@ export const BlankSpace = () => {
                                 ></textarea>
                             </div>
                             <div className="text-center">
-                                <input type="submit" className="btn btn-primary" value="Comment" />
+                                <input type="submit" className="btn btn-primary btn-primary-comment" value="Comment" />
                             </div>
                         </form>
                     </div>
@@ -562,7 +560,57 @@ export const Blue = () => {
                     <div className="col-md-12">
                         <p className="text-center">
                             {/* Add the lyrics here */}
-                            Mm, mm, mm...
+                            Mm, mm, mm
+I try to live in black and white, but I'm so blue
+I'd like to mean it when I say I'm over you
+But that's still not true (blue)
+And I'm still so blue, oh
+I thought we were the same (I thought we were the same)
+Birds of a feather (birds of a feather), now I'm ashamed
+I told you a lie, désolé, mon amour
+I'm trying my best, don't know what's in store
+Open up the door (blue)
+In the back of my mind, I'm still overseas
+A bird in a cage, thought you were made for me
+I try (I'm not what) to live in black and white
+But I'm so blue (but I'm not what you need)
+I'd like (not what you need) to mean it when I say I'm over you
+But that's still not true, true
+And I'm still so blue (and it's not true)
+I'm true blue, true blue
+I'm true blue
+mm, mm, mm
+Ah-ah
+Ah-ah-ah-ah
+Ah-ah
+You were born bluer than a butterfly
+Beautiful and so deprived of oxygen
+Colder than your father's eyes
+He never learned to sympathize with anyone
+I don't blame you
+But I can't change you
+Don't hate you (don't hate you)
+But we can't save you (but we can't save you)
+You were born reaching for your mother's hands
+Victim of your father's plans to rule the world
+Too afraid to step outside
+Paranoid and petrified of what you've heard
+But they could say the same 'bout me
+I sleep 'bout three hours each night
+Means only 21 a week now, now
+And I could say the same 'bout you
+Born blameless, grew up famous too
+Just a baby born blue now, now
+I don't blame you (I don't blame you)
+But I can't change you
+Don't hate you
+But we can't save you (we can't save you)
+Ooh-ooh
+It's over now
+It's over now
+It's over now
+(Ah-ah-ah, ah)
+But when can I hear the next one?
                         </p>
                     </div>
                 </div>
@@ -572,16 +620,15 @@ export const Blue = () => {
                     <div className="col-md-12">
                         {/* Comment Form */}
                         <fieldset id="comment-controls">
-                            <legend>Share your thoughts</legend>
                             <textarea
                                 className="form-control"
                                 rows="4"
-                                placeholder="What's on your mind?"
+                                placeholder="Share what you think is behind the beat!"
                                 value={newComment}
                                 onChange={(e) => setNewComment(e.target.value)}
                             />
                             <div className="text-center mt-3">
-                                <button type="submit" onClick={handleCommentSubmit} className="btn btn-primary">Post Comment</button>
+                            <button type="submit" onClick={handleCommentSubmit} className="btn btn-primary comment">Post Comment</button>
                             </div>
                         </fieldset>
                     </div>
