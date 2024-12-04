@@ -3,9 +3,168 @@ import './songs.css';
 import { useLocation } from 'react-router-dom'; // If you're using React Router for page routing
 
 
-
-//taylor swift
 export const BlankSpace = () => {
+    const [comments, setComments] = useState(() => {
+        const savedComments = localStorage.getItem('blankSpace_comments');
+        return savedComments ? JSON.parse(savedComments) : [];
+    });
+    const [newComment, setNewComment] = useState('');
+
+    const userName = localStorage.getItem('userName');
+    const isAdmin = userName === 'noah@dunn'; // Check if the logged-in user is the admin
+
+    const [userLikes, setUserLikes] = useState(() => {
+        const savedLikes = localStorage.getItem('userLikes');
+        return savedLikes ? JSON.parse(savedLikes) : {};
+    });
+
+    const location = useLocation(); // Get the current route
+    const currentPage = location.pathname; // Get the current page path
+
+    useEffect(() => {
+        const ws = new WebSocket('ws://localhost:4000');
+
+        ws.onmessage = (event) => {
+            const messageData = JSON.parse(event.data);
+
+            if (messageData.type === 'comment') {
+                if (messageData.page === '/blankSpace') {
+                    setComments((prevComments) => {
+                        const updatedComments = [...prevComments, messageData.comment];
+                        localStorage.setItem('blankSpace_comments', JSON.stringify(updatedComments));
+                        return updatedComments;
+                    });
+                }
+            }
+
+            if (messageData.type === 'delete') {
+                if (messageData.page === '/blankSpace') {
+                    setComments((prevComments) => {
+                        const updatedComments = prevComments.filter(comment => comment.id !== messageData.commentId);
+                        localStorage.setItem('blankSpace_comments', JSON.stringify(updatedComments));
+                        return updatedComments;
+                    });
+                }
+            }
+
+            if (messageData.type === 'like') {
+                if (messageData.page === '/blankSpace') {
+                    setComments((prevComments) => {
+                        const updatedComments = prevComments.map((comment) => {
+                            if (comment.id === messageData.commentId) {
+                                return { ...comment, likes: comment.likes + 1 };
+                            }
+                            return comment;
+                        });
+                        localStorage.setItem('blankSpace_comments', JSON.stringify(updatedComments));
+                        return updatedComments;
+                    });
+                    setUserLikes((prevLikes) => {
+                        const updatedLikes = { ...prevLikes, [messageData.commentId]: true };
+                        localStorage.setItem('userLikes', JSON.stringify(updatedLikes));
+                        return updatedLikes;
+                    });
+                }
+            }
+        };
+
+        return () => {
+            ws.close();
+        };
+    }, []);
+
+    const handleCommentSubmit = (e) => {
+        e.preventDefault();
+        if (newComment.trim()) {
+            const commentData = {
+                type: 'comment',
+                page: '/blankSpace',
+                comment: {
+                    username: userName ? userName : 'User',
+                    text: newComment,
+                    likes: 0,
+                    id: Date.now(),
+                }
+            };
+
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify(commentData));
+                setNewComment('');
+            };
+        }
+    };
+
+    const handleLike = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to like a comment');
+            return;
+        }
+
+        if (userLikes[commentId]) {
+            alert('You can only like a comment once');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({
+                type: 'like',
+                commentId: commentId,
+                page: '/blankSpace',
+            }));
+        };
+    };
+
+    const handleDelete = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to delete a comment');
+            return;
+        }
+
+        const comment = comments.find(comment => comment.id === commentId);
+
+        if (comment && comment.username === userName) {
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    type: 'delete',
+                    commentId: commentId,
+                    page: '/blankSpace',
+                }));
+            };
+
+            setComments((prevComments) => {
+                const updatedComments = prevComments.filter((comment) => comment.id !== commentId);
+                localStorage.setItem('blankSpace_comments', JSON.stringify(updatedComments));
+                return updatedComments;
+            });
+        } else {
+            alert('You can only delete your own comments');
+        }
+    };
+
+    // Admin functionality to delete all comments
+    const handleDeleteAllComments = () => {
+        if (!isAdmin) {
+            alert('You must be an admin to delete all comments');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({ type: 'deleteAll', page: '/blankSpace' }));
+        };
+
+        setComments([]); // Remove all comments locally
+        localStorage.setItem('blankSpace_comments', JSON.stringify([])); // Clear from localStorage
+    };
+
+    // Only render comments for this specific page (blankSpace by Billie Eilish)
+    if (currentPage !== '/blankSpace') {
+        return null; // Don't render comments section for other pages
+    }
+
     return (
         <>
             <header className="py-5">
@@ -16,9 +175,10 @@ export const BlankSpace = () => {
 
             <div className="container my-5">
                 <div className="row">
-                    {/* Song Lyrics */}
-                    <div className="col-md-6">
-                        <p className="text-center">Nice to meet you, where you been?
+                    <div className="col-md-12">
+                        <p className="text-center">
+                            {/* Lyrics for the song */}
+                            Nice to meet you, where you been?
                             I could show you incredible things
                             Magic, madness, heaven, sin
                             Saw you there and I thought
@@ -99,48 +259,82 @@ export const BlankSpace = () => {
                             Got a long list of ex lovers
                             They'll tell you I'm insane
                             But I've got a blank space, baby
-                            And I'll write your name</p>
+                            And I'll write your name
+                        </p>
                     </div>
+                </div>
 
-                    {/* Comment Section */}
-                    <div className="col-md-6">
-                        {/* Social Media Style Comments */}
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/635359428/photo/new-york-ny-rumor-the-german-shepherd-poses-for-photos-after-winning-best-in-show-at-the.jpg?s=612x612&w=0&k=20&c=R8o1kV8KPl9z7QunBBgOHupjm_sY7n-U-7PFKKJZSC0="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude1:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">5 minutes ago</small>
-                            </div>
-                        </div>
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/85438939/photo/a-soft-coated-wheaten-terrier-dog-named-zoey-waits-for-the-start-of-a-parade-at-the-woofstock.jpg?s=612x612&w=0&k=20&c=n644q3tfcbFR1qEPG51O15KUiF3pMrKl5zuIY4V7sjk="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude2:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">10 minutes ago</small>
-                            </div>
-                        </div>
-                        <form>
-                            <div className="form-group mb-3">
+                {/* Comment Form */}
+                {userName && (
+                    <div className="row">
+                        <div className="col-md-12">
+                            <fieldset id="comment-controls">
                                 <textarea
                                     className="form-control"
-                                    id="commentBox"
-                                    name="commentBox"
                                     rows="4"
-                                    placeholder="share what you think is behind the beat"
-                                ></textarea>
+                                    placeholder="Share your thoughts on this song!"
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                />
+                                <div className="text-center mt-3">
+                                    <button
+                                        type="submit"
+                                        onClick={handleCommentSubmit}
+                                        className="btn btn-primary comment"
+                                    >
+                                        Post Comment
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                )}
+
+                {/* Admin Delete All Comments Button */}
+                {isAdmin && (
+                    <div className="text-center mt-3">
+                        <button
+                            className="btn btn-danger"
+                            onClick={handleDeleteAllComments}
+                        >
+                            Delete All Comments
+                        </button>
+                    </div>
+                )}
+
+                {/* Display Comments Section */}
+                <div className="row">
+                    <div className="col-md-12">
+                        {comments.map((comment) => (
+                            <div className="d-flex align-items-start mb-4" key={comment.id}>
+                                <img
+                                    src="https://media.istockphoto.com/id/518552551/photo/male-silhouette-profile-picture-with-question-mark.jpg?b=1&s=612x612&w=0&k=20&c=L32hXWmACbW9z2pffVuIjWn720NWllGPJJI2galSiDQ="
+                                    alt="User Avatar"
+                                    className="small-avatar me-3"
+                                />
+                                <div className="border p-3 rounded w-100">
+                                    <p className="mb-1">
+                                        <strong>{comment.username}:</strong> {comment.text}
+                                    </p>
+                                    <div className="d-flex justify-content-between">
+                                        <button 
+                                            className="btn btn-sm btn-outline-primary"
+                                            onClick={() => handleLike(comment.id)}
+                                        >
+                                            👍 {comment.likes}
+                                        </button>
+                                        {comment.username === userName && (
+                                            <button 
+                                                className="btn btn-sm btn-outline-danger"
+                                                onClick={() => handleDelete(comment.id)}
+                                            >
+                                                🗑️ Delete
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                            <div className="text-center">
-                                <input type="submit" className="btn btn-primary btn-primary-comment" value="Comment" />
-                            </div>
-                        </form>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -148,21 +342,173 @@ export const BlankSpace = () => {
     );
 };
 
-export const CruelSummer = () => {
+
+export const ShakeItOff = () => {
+    const [comments, setComments] = useState(() => {
+        const savedComments = localStorage.getItem('shakeItOffComments');
+        return savedComments ? JSON.parse(savedComments) : [];
+    });
+    const [newComment, setNewComment] = useState('');
+
+    const userName = localStorage.getItem('userName');
+    const isAdmin = userName === 'noah@dunn'; // Check if the logged-in user is the admin
+
+    const [userLikes, setUserLikes] = useState(() => {
+        const savedLikes = localStorage.getItem('userLikes');
+        return savedLikes ? JSON.parse(savedLikes) : {};
+    });
+
+    const location = useLocation(); // Get the current route
+    const currentPage = location.pathname; // Get the current page path
+
+    useEffect(() => {
+        const ws = new WebSocket('ws://localhost:4000');
+
+        ws.onmessage = (event) => {
+            const messageData = JSON.parse(event.data);
+
+            if (messageData.type === 'comment') {
+                setComments((prevComments) => {
+                    const updatedComments = [...prevComments, messageData.comment];
+                    localStorage.setItem('shakeItOffComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+            }
+
+            if (messageData.type === 'delete') {
+                setComments((prevComments) => {
+                    const updatedComments = prevComments.filter(comment => comment.id !== messageData.commentId);
+                    localStorage.setItem('shakeItOffComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+            }
+
+            if (messageData.type === 'like') {
+                setComments((prevComments) => {
+                    const updatedComments = prevComments.map((comment) => {
+                        if (comment.id === messageData.commentId) {
+                            return { ...comment, likes: comment.likes + 1 };
+                        }
+                        return comment;
+                    });
+                    localStorage.setItem('shakeItOffComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+                setUserLikes((prevLikes) => {
+                    const updatedLikes = { ...prevLikes, [messageData.commentId]: true };
+                    localStorage.setItem('userLikes', JSON.stringify(updatedLikes));
+                    return updatedLikes;
+                });
+            }
+        };
+
+        return () => {
+            ws.close();
+        };
+    }, []);
+
+    const handleCommentSubmit = (e) => {
+        e.preventDefault();
+        if (newComment.trim()) {
+            const commentData = {
+                type: 'comment',
+                comment: {
+                    username: userName ? userName : 'User',
+                    text: newComment,
+                    likes: 0,
+                    id: Date.now(),
+                }
+            };
+
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify(commentData));
+                setNewComment('');
+            };
+        }
+    };
+
+    const handleLike = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to like a comment');
+            return;
+        }
+
+        if (userLikes[commentId]) {
+            alert('You can only like a comment once');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({
+                type: 'like',
+                commentId: commentId,
+            }));
+        };
+    };
+
+    const handleDelete = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to delete a comment');
+            return;
+        }
+
+        const comment = comments.find(comment => comment.id === commentId);
+
+        if (comment && comment.username === userName) {
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    type: 'delete',
+                    commentId: commentId,
+                }));
+            };
+
+            setComments((prevComments) => {
+                const updatedComments = prevComments.filter((comment) => comment.id !== commentId);
+                localStorage.setItem('shakeItOffComments', JSON.stringify(updatedComments));
+                return updatedComments;
+            });
+        } else {
+            alert('You can only delete your own comments');
+        }
+    };
+
+    // Admin functionality to delete all comments
+    const handleDeleteAllComments = () => {
+        if (!isAdmin) {
+            alert('You must be an admin to delete all comments');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({ type: 'deleteAll' }));
+        };
+
+        setComments([]); // Remove all comments locally
+        localStorage.setItem('shakeItOffComments', JSON.stringify([])); // Clear from localStorage
+    };
+
+    // Only render comments for this specific page (shakeItOff by Billie Eilish)
+    if (currentPage !== '/shakeItOff') {
+        return null; // Don't render comments section for other pages
+    }
+
     return (
         <>
             <header className="py-5">
                 <div className="container text-center text-white">
-                    <h1 className="fw-bold" style={{ fontSize: '2rem' }}>Cruel Summer by Taylor Swift</h1>
+                    <h1 className="fw-bold" style={{ fontSize: '2rem' }}>Shake It Off by Taylor Swift</h1>
                 </div>
             </header>
 
-            {/* Main Content: Lyrics and Comment Section */}
             <div className="container my-5">
                 <div className="row">
-                    {/* Song Lyrics Section */}
-                    <div className="col-md-6">
-                        <p className="text-center">Fever dream high in the quiet of the night
+                    <div className="col-md-12">
+                        <p className="text-center">
+                        Fever dream high in the quiet of the night
                             You know that I caught it
                             Bad, bad boy
                             Shiny toy with a price
@@ -224,49 +570,82 @@ export const CruelSummer = () => {
                             Every night that summer just to seal my fate (oh)
                             And I screamed for whatever it's worth
                             "I love you, " ain't that the worst thing you ever heard?
-                            (Yeah, yeah, yeah, yeah)</p>
+                            (Yeah, yeah, yeah, yeah)
+                        </p>
                     </div>
+                </div>
 
-                    {/* Comment Section */}
-                    <div className="col-md-6">
-                        {/* Social Media Style Comments */}
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/635359428/photo/new-york-ny-rumor-the-german-shepherd-poses-for-photos-after-winning-best-in-show-at-the.jpg?s=612x612&w=0&k=20&c=R8o1kV8KPl9z7QunBBgOHupjm_sY7n-U-7PFKKJZSC0="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude1:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">5 minutes ago</small>
-                            </div>
-                        </div>
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/85438939/photo/a-soft-coated-wheaten-terrier-dog-named-zoey-waits-for-the-start-of-a-parade-at-the-woofstock.jpg?s=612x612&w=0&k=20&c=n644q3tfcbFR1qEPG51O15KUiF3pMrKl5zuIY4V7sjk="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude2:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">10 minutes ago</small>
-                            </div>
-                        </div>
-                        {/* Comment Form */}
-                        <form>
-                            <div className="form-group mb-3">
+                {/* Comment Form */}
+                {userName && (
+                    <div className="row">
+                        <div className="col-md-12">
+                            <fieldset id="comment-controls">
                                 <textarea
                                     className="form-control"
-                                    id="commentBox"
-                                    name="commentBox"
                                     rows="4"
-                                    placeholder="share what you think is behind the beat"
-                                ></textarea>
+                                    placeholder="Share your thoughts on 'shakeItOff'!"
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                />
+                                <div className="text-center mt-3">
+                                    <button
+                                        type="submit"
+                                        onClick={handleCommentSubmit}
+                                        className="btn btn-primary comment"
+                                    >
+                                        Post Comment
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                )}
+
+                {/* Admin Delete All Comments Button */}
+                {isAdmin && (
+                    <div className="text-center mt-3">
+                        <button
+                            className="btn btn-danger"
+                            onClick={handleDeleteAllComments}
+                        >
+                            Delete All Comments
+                        </button>
+                    </div>
+                )}
+
+                 {/* Display Comments Section */}
+                 <div className="row">
+                    <div className="col-md-12">
+                        {comments.map((comment) => (
+                            <div className="d-flex align-items-start mb-4" key={comment.id}>
+                                <img
+                                    src="https://media.istockphoto.com/id/518552551/photo/male-silhouette-profile-picture-with-question-mark.jpg?b=1&s=612x612&w=0&k=20&c=L32hXWmACbW9z2pffVuIjWn720NWllGPJJI2galSiDQ="
+                                    alt="User Avatar"
+                                    className="small-avatar me-3"
+                                />
+                                <div className="border p-3 rounded w-100">
+                                    <p className="mb-1">
+                                        <strong>{comment.username}:</strong> {comment.text}
+                                    </p>
+                                    <div className="d-flex justify-content-between">
+                                        <button 
+                                            className="btn btn-sm btn-outline-primary"
+                                            onClick={() => handleLike(comment.id)}
+                                        >
+                                            👍 {comment.likes}
+                                        </button>
+                                        {comment.username === userName && (
+                                            <button 
+                                                className="btn btn-sm btn-outline-danger"
+                                                onClick={() => handleDelete(comment.id)}
+                                            >
+                                                🗑️ Delete
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                            <div className="text-center">
-                                <input type="submit" className="btn btn-primary" value="Comment" />
-                            </div>
-                        </form>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -274,21 +653,173 @@ export const CruelSummer = () => {
     );
 };
 
-export const ShakeItOff = () => {
+
+export const CruelSummer = () => {
+    const [comments, setComments] = useState(() => {
+        const savedComments = localStorage.getItem('cruelSummerComments');
+        return savedComments ? JSON.parse(savedComments) : [];
+    });
+    const [newComment, setNewComment] = useState('');
+
+    const userName = localStorage.getItem('userName');
+    const isAdmin = userName === 'noah@dunn'; // Check if the logged-in user is the admin
+
+    const [userLikes, setUserLikes] = useState(() => {
+        const savedLikes = localStorage.getItem('userLikes');
+        return savedLikes ? JSON.parse(savedLikes) : {};
+    });
+
+    const location = useLocation(); // Get the current route
+    const currentPage = location.pathname; // Get the current page path
+
+    useEffect(() => {
+        const ws = new WebSocket('ws://localhost:4000');
+
+        ws.onmessage = (event) => {
+            const messageData = JSON.parse(event.data);
+
+            if (messageData.type === 'comment') {
+                setComments((prevComments) => {
+                    const updatedComments = [...prevComments, messageData.comment];
+                    localStorage.setItem('cruelSummerComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+            }
+
+            if (messageData.type === 'delete') {
+                setComments((prevComments) => {
+                    const updatedComments = prevComments.filter(comment => comment.id !== messageData.commentId);
+                    localStorage.setItem('cruelSummerComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+            }
+
+            if (messageData.type === 'like') {
+                setComments((prevComments) => {
+                    const updatedComments = prevComments.map((comment) => {
+                        if (comment.id === messageData.commentId) {
+                            return { ...comment, likes: comment.likes + 1 };
+                        }
+                        return comment;
+                    });
+                    localStorage.setItem('cruelSummerComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+                setUserLikes((prevLikes) => {
+                    const updatedLikes = { ...prevLikes, [messageData.commentId]: true };
+                    localStorage.setItem('userLikes', JSON.stringify(updatedLikes));
+                    return updatedLikes;
+                });
+            }
+        };
+
+        return () => {
+            ws.close();
+        };
+    }, []);
+
+    const handleCommentSubmit = (e) => {
+        e.preventDefault();
+        if (newComment.trim()) {
+            const commentData = {
+                type: 'comment',
+                comment: {
+                    username: userName ? userName : 'User',
+                    text: newComment,
+                    likes: 0,
+                    id: Date.now(),
+                }
+            };
+
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify(commentData));
+                setNewComment('');
+            };
+        }
+    };
+
+    const handleLike = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to like a comment');
+            return;
+        }
+
+        if (userLikes[commentId]) {
+            alert('You can only like a comment once');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({
+                type: 'like',
+                commentId: commentId,
+            }));
+        };
+    };
+
+    const handleDelete = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to delete a comment');
+            return;
+        }
+
+        const comment = comments.find(comment => comment.id === commentId);
+
+        if (comment && comment.username === userName) {
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    type: 'delete',
+                    commentId: commentId,
+                }));
+            };
+
+            setComments((prevComments) => {
+                const updatedComments = prevComments.filter((comment) => comment.id !== commentId);
+                localStorage.setItem('cruelSummerComments', JSON.stringify(updatedComments));
+                return updatedComments;
+            });
+        } else {
+            alert('You can only delete your own comments');
+        }
+    };
+
+    // Admin functionality to delete all comments
+    const handleDeleteAllComments = () => {
+        if (!isAdmin) {
+            alert('You must be an admin to delete all comments');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({ type: 'deleteAll' }));
+        };
+
+        setComments([]); // Remove all comments locally
+        localStorage.setItem('cruelSummerComments', JSON.stringify([])); // Clear from localStorage
+    };
+
+    // Only render comments for this specific page (cruelSummer by Billie Eilish)
+    if (currentPage !== '/cruelSummer') {
+        return null; // Don't render comments section for other pages
+    }
+
     return (
         <>
             <header className="py-5">
                 <div className="container text-center text-white">
-                    <h1 className="fw-bold" style={{ fontSize: '2rem' }}>Shake It Off by Taylor Swift</h1>
+                    <h1 className="fw-bold" style={{ fontSize: '2rem' }}>Cruel Summer by Taylor Swift</h1>
                 </div>
             </header>
 
-            {/* Main Content: Lyrics and Comment Section */}
             <div className="container my-5">
                 <div className="row">
-                    {/* Song Lyrics Section */}
-                    <div className="col-md-6">
-                        <p className="text-center">I stay out too late
+                    <div className="col-md-12">
+                        <p className="text-center">
+                        I stay out too late
                             Got nothing in my brain
                             That's what people say, mm-mm
                             That's what people say, mm-mm
@@ -356,49 +887,82 @@ export const ShakeItOff = () => {
                             Shake it off, I shake it off
                             I, I, I shake it off, I shake it off (you got to)
                             I, I, I shake it off, I shake it off
-                            I, I, I shake it off, I shake it off</p>
+                            I, I, I shake it off, I shake it off
+                        </p>
                     </div>
+                </div>
 
-                    {/* Comment Section */}
-                    <div className="col-md-6">
-                        {/* Social Media Style Comments */}
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/635359428/photo/new-york-ny-rumor-the-german-shepherd-poses-for-photos-after-winning-best-in-show-at-the.jpg?s=612x612&w=0&k=20&c=R8o1kV8KPl9z7QunBBgOHupjm_sY7n-U-7PFKKJZSC0="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude1:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">5 minutes ago</small>
-                            </div>
-                        </div>
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/85438939/photo/a-soft-coated-wheaten-terrier-dog-named-zoey-waits-for-the-start-of-a-parade-at-the-woofstock.jpg?s=612x612&w=0&k=20&c=n644q3tfcbFR1qEPG51O15KUiF3pMrKl5zuIY4V7sjk="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude2:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">10 minutes ago</small>
-                            </div>
-                        </div>
-                        {/* Comment Form */}
-                        <form>
-                            <div className="form-group mb-3">
+                {/* Comment Form */}
+                {userName && (
+                    <div className="row">
+                        <div className="col-md-12">
+                            <fieldset id="comment-controls">
                                 <textarea
                                     className="form-control"
-                                    id="commentBox"
-                                    name="commentBox"
                                     rows="4"
-                                    placeholder="share what you think is behind the beat"
-                                ></textarea>
+                                    placeholder="Share your thoughts on 'cruelSummer'!"
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                />
+                                <div className="text-center mt-3">
+                                    <button
+                                        type="submit"
+                                        onClick={handleCommentSubmit}
+                                        className="btn btn-primary comment"
+                                    >
+                                        Post Comment
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                )}
+
+                {/* Admin Delete All Comments Button */}
+                {isAdmin && (
+                    <div className="text-center mt-3">
+                        <button
+                            className="btn btn-danger"
+                            onClick={handleDeleteAllComments}
+                        >
+                            Delete All Comments
+                        </button>
+                    </div>
+                )}
+
+                 {/* Display Comments Section */}
+                 <div className="row">
+                    <div className="col-md-12">
+                        {comments.map((comment) => (
+                            <div className="d-flex align-items-start mb-4" key={comment.id}>
+                                <img
+                                    src="https://media.istockphoto.com/id/518552551/photo/male-silhouette-profile-picture-with-question-mark.jpg?b=1&s=612x612&w=0&k=20&c=L32hXWmACbW9z2pffVuIjWn720NWllGPJJI2galSiDQ="
+                                    alt="User Avatar"
+                                    className="small-avatar me-3"
+                                />
+                                <div className="border p-3 rounded w-100">
+                                    <p className="mb-1">
+                                        <strong>{comment.username}:</strong> {comment.text}
+                                    </p>
+                                    <div className="d-flex justify-content-between">
+                                        <button 
+                                            className="btn btn-sm btn-outline-primary"
+                                            onClick={() => handleLike(comment.id)}
+                                        >
+                                            👍 {comment.likes}
+                                        </button>
+                                        {comment.username === userName && (
+                                            <button 
+                                                className="btn btn-sm btn-outline-danger"
+                                                onClick={() => handleDelete(comment.id)}
+                                            >
+                                                🗑️ Delete
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                            <div className="text-center">
-                                <input type="submit" className="btn btn-primary" value="Comment" />
-                            </div>
-                        </form>
+                        ))}
                     </div>
                 </div>
             </div>
