@@ -1841,8 +1841,160 @@ Tastes like she might be the one
     );
 };
 
-//Drake 
-export const UMyEverything = () => {
+// correct
+export const UMyEverything = () => { 
+    const [comments, setComments] = useState(() => {
+        const savedComments = localStorage.getItem('uMyEverythingComments');
+        return savedComments ? JSON.parse(savedComments) : [];
+    });
+    const [newComment, setNewComment] = useState('');
+
+    const userName = localStorage.getItem('userName');
+    const isAdmin = userName === 'noah@dunn'; // Check if the logged-in user is the admin
+
+    const [userLikes, setUserLikes] = useState(() => {
+        const savedLikes = localStorage.getItem('userLikes');
+        return savedLikes ? JSON.parse(savedLikes) : {};
+    });
+
+    const location = useLocation(); // Get the current route
+    const currentPage = location.pathname; // Get the current page path
+
+    useEffect(() => {
+        const ws = new WebSocket('ws://localhost:4000');
+
+        ws.onmessage = (event) => {
+            const messageData = JSON.parse(event.data);
+
+            if (messageData.type === 'comment') {
+                setComments((prevComments) => {
+                    const updatedComments = [...prevComments, messageData.comment];
+                    localStorage.setItem('uMyEverythingComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+            }
+
+            if (messageData.type === 'delete') {
+                setComments((prevComments) => {
+                    const updatedComments = prevComments.filter(comment => comment.id !== messageData.commentId);
+                    localStorage.setItem('uMyEverythingComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+            }
+
+            if (messageData.type === 'like') {
+                setComments((prevComments) => {
+                    const updatedComments = prevComments.map((comment) => {
+                        if (comment.id === messageData.commentId) {
+                            return { ...comment, likes: comment.likes + 1 };
+                        }
+                        return comment;
+                    });
+                    localStorage.setItem('uMyEverythingComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+                setUserLikes((prevLikes) => {
+                    const updatedLikes = { ...prevLikes, [messageData.commentId]: true };
+                    localStorage.setItem('userLikes', JSON.stringify(updatedLikes));
+                    return updatedLikes;
+                });
+            }
+        };
+
+        return () => {
+            ws.close();
+        };
+    }, []);
+
+    const handleCommentSubmit = (e) => {
+        e.preventDefault();
+        if (newComment.trim()) {
+            const commentData = {
+                type: 'comment',
+                comment: {
+                    username: userName ? userName : 'User',
+                    text: newComment,
+                    likes: 0,
+                    id: Date.now(),
+                }
+            };
+
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify(commentData));
+                setNewComment('');
+            };
+        }
+    };
+
+    const handleLike = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to like a comment');
+            return;
+        }
+
+        if (userLikes[commentId]) {
+            alert('You can only like a comment once');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({
+                type: 'like',
+                commentId: commentId,
+            }));
+        };
+    };
+
+    const handleDelete = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to delete a comment');
+            return;
+        }
+
+        const comment = comments.find(comment => comment.id === commentId);
+
+        if (comment && comment.username === userName) {
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    type: 'delete',
+                    commentId: commentId,
+                }));
+            };
+
+            setComments((prevComments) => {
+                const updatedComments = prevComments.filter((comment) => comment.id !== commentId);
+                localStorage.setItem('uMyEverythingComments', JSON.stringify(updatedComments));
+                return updatedComments;
+            });
+        } else {
+            alert('You can only delete your own comments');
+        }
+    };
+
+    // Admin functionality to delete all comments
+    const handleDeleteAllComments = () => {
+        if (!isAdmin) {
+            alert('You must be an admin to delete all comments');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({ type: 'deleteAll' }));
+        };
+
+        setComments([]); // Remove all comments locally
+        localStorage.setItem('uMyEverythingComments', JSON.stringify([])); // Clear from localStorage
+    };
+
+    // Only render comments for this specific page (uMyEverything by Billie Eilish)
+    if (currentPage !== '/uMyEverything') {
+        return null; // Don't render comments section for other pages
+    }
+
     return (
         <>
             <header className="py-5">
@@ -1851,12 +2003,11 @@ export const UMyEverything = () => {
                 </div>
             </header>
 
-            {/* Main Content: Lyrics and Comment Section */}
             <div className="container my-5">
                 <div className="row">
-                    {/* Song Lyrics Section */}
-                    <div className="col-md-6">
-                        <p className="text-center">Uh-huh, yeah
+                    <div className="col-md-12">
+                        <p className="text-center">
+                        Uh-huh, yeah
                             (Tay Keith, fuck these niggas up)
                             Yeah, yeah, yeah
                             Ah-ahem
@@ -1922,47 +2073,79 @@ export const UMyEverything = () => {
                             Nigga, we go together, tell them hoes we go together (Sexyy, in this world)
                         </p>
                     </div>
+                </div>
 
-                    {/* Comment Section */}
-                    <div className="col-md-6">
-                        {/* Social Media Style Comments */}
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/635359428/photo/new-york-ny-rumor-the-german-shepherd-poses-for-photos-after-winning-best-in-show-at-the.jpg?s=612x612&w=0&k=20&c=R8o1kV8KPl9z7QunBBgOHupjm_sY7n-U-7PFKKJZSC0="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude1:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">5 minutes ago</small>
-                            </div>
-                        </div>
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/85438939/photo/a-soft-coated-wheaten-terrier-dog-named-zoey-waits-for-the-start-of-a-parade-at-the-woofstock.jpg?s=612x612&w=0&k=20&c=n644q3tfcbFR1qEPG51O15KUiF3pMrKl5zuIY4V7sjk="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude2:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">10 minutes ago</small>
-                            </div>
-                        </div>
-                        {/* Comment Form */}
-                        <form>
-                            <div className="form-group mb-3">
+                {/* Comment Form */}
+                {userName && (
+                    <div className="row">
+                        <div className="col-md-12">
+                            <fieldset id="comment-controls">
                                 <textarea
                                     className="form-control"
-                                    id="commentBox"
-                                    name="commentBox"
                                     rows="4"
-                                    placeholder="share what you think is behind the beat"
-                                ></textarea>
+                                    placeholder="Share your thoughts on 'uMyEverything'!"
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                />
+                                <div className="text-center mt-3">
+                                    <button
+                                        type="submit"
+                                        onClick={handleCommentSubmit}
+                                        className="btn btn-primary comment"
+                                    >
+                                        Post Comment
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                )}
+
+                {/* Admin Delete All Comments Button */}
+                {isAdmin && (
+                    <div className="text-center mt-3">
+                        <button
+                            className="btn btn-danger"
+                            onClick={handleDeleteAllComments}
+                        >
+                            Delete All Comments
+                        </button>
+                    </div>
+                )}
+
+                 {/* Display Comments Section */}
+                 <div className="row">
+                    <div className="col-md-12">
+                        {comments.map((comment) => (
+                            <div className="d-flex align-items-start mb-4" key={comment.id}>
+                                <img
+                                    src="https://media.istockphoto.com/id/518552551/photo/male-silhouette-profile-picture-with-question-mark.jpg?b=1&s=612x612&w=0&k=20&c=L32hXWmACbW9z2pffVuIjWn720NWllGPJJI2galSiDQ="
+                                    alt="User Avatar"
+                                    className="small-avatar me-3"
+                                />
+                                <div className="border p-3 rounded w-100">
+                                    <p className="mb-1">
+                                        <strong>{comment.username}:</strong> {comment.text}
+                                    </p>
+                                    <div className="d-flex justify-content-between">
+                                        <button 
+                                            className="btn btn-sm btn-outline-primary"
+                                            onClick={() => handleLike(comment.id)}
+                                        >
+                                            👍 {comment.likes}
+                                        </button>
+                                        {comment.username === userName && (
+                                            <button 
+                                                className="btn btn-sm btn-outline-danger"
+                                                onClick={() => handleDelete(comment.id)}
+                                            >
+                                                🗑️ Delete
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                            <div className="text-center">
-                                <input type="submit" className="btn btn-primary" value="Comment" />
-                            </div>
-                        </form>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -1970,21 +2153,173 @@ export const UMyEverything = () => {
     );
 };
 
-export const OneDance = () => {
+// correct
+export const OneDance = () => { 
+    const [comments, setComments] = useState(() => {
+        const savedComments = localStorage.getItem('oneDanceComments');
+        return savedComments ? JSON.parse(savedComments) : [];
+    });
+    const [newComment, setNewComment] = useState('');
+
+    const userName = localStorage.getItem('userName');
+    const isAdmin = userName === 'noah@dunn'; // Check if the logged-in user is the admin
+
+    const [userLikes, setUserLikes] = useState(() => {
+        const savedLikes = localStorage.getItem('userLikes');
+        return savedLikes ? JSON.parse(savedLikes) : {};
+    });
+
+    const location = useLocation(); // Get the current route
+    const currentPage = location.pathname; // Get the current page path
+
+    useEffect(() => {
+        const ws = new WebSocket('ws://localhost:4000');
+
+        ws.onmessage = (event) => {
+            const messageData = JSON.parse(event.data);
+
+            if (messageData.type === 'comment') {
+                setComments((prevComments) => {
+                    const updatedComments = [...prevComments, messageData.comment];
+                    localStorage.setItem('oneDanceComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+            }
+
+            if (messageData.type === 'delete') {
+                setComments((prevComments) => {
+                    const updatedComments = prevComments.filter(comment => comment.id !== messageData.commentId);
+                    localStorage.setItem('oneDanceComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+            }
+
+            if (messageData.type === 'like') {
+                setComments((prevComments) => {
+                    const updatedComments = prevComments.map((comment) => {
+                        if (comment.id === messageData.commentId) {
+                            return { ...comment, likes: comment.likes + 1 };
+                        }
+                        return comment;
+                    });
+                    localStorage.setItem('oneDanceComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+                setUserLikes((prevLikes) => {
+                    const updatedLikes = { ...prevLikes, [messageData.commentId]: true };
+                    localStorage.setItem('userLikes', JSON.stringify(updatedLikes));
+                    return updatedLikes;
+                });
+            }
+        };
+
+        return () => {
+            ws.close();
+        };
+    }, []);
+
+    const handleCommentSubmit = (e) => {
+        e.preventDefault();
+        if (newComment.trim()) {
+            const commentData = {
+                type: 'comment',
+                comment: {
+                    username: userName ? userName : 'User',
+                    text: newComment,
+                    likes: 0,
+                    id: Date.now(),
+                }
+            };
+
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify(commentData));
+                setNewComment('');
+            };
+        }
+    };
+
+    const handleLike = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to like a comment');
+            return;
+        }
+
+        if (userLikes[commentId]) {
+            alert('You can only like a comment once');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({
+                type: 'like',
+                commentId: commentId,
+            }));
+        };
+    };
+
+    const handleDelete = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to delete a comment');
+            return;
+        }
+
+        const comment = comments.find(comment => comment.id === commentId);
+
+        if (comment && comment.username === userName) {
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    type: 'delete',
+                    commentId: commentId,
+                }));
+            };
+
+            setComments((prevComments) => {
+                const updatedComments = prevComments.filter((comment) => comment.id !== commentId);
+                localStorage.setItem('oneDanceComments', JSON.stringify(updatedComments));
+                return updatedComments;
+            });
+        } else {
+            alert('You can only delete your own comments');
+        }
+    };
+
+    // Admin functionality to delete all comments
+    const handleDeleteAllComments = () => {
+        if (!isAdmin) {
+            alert('You must be an admin to delete all comments');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({ type: 'deleteAll' }));
+        };
+
+        setComments([]); // Remove all comments locally
+        localStorage.setItem('oneDanceComments', JSON.stringify([])); // Clear from localStorage
+    };
+
+    // Only render comments for this specific page (oneDance by Billie Eilish)
+    if (currentPage !== '/oneDance') {
+        return null; // Don't render comments section for other pages
+    }
+
     return (
         <>
             <header className="py-5">
                 <div className="container text-center text-white">
-                    <h1 className="fw-bold" style={{ fontSize: '2rem' }}>One Dance by Drake</h1>
+                    <h1 className="fw-bold" style={{ fontSize: '2rem' }}> One Dance by Drake</h1>
                 </div>
             </header>
 
-            {/* Main Content: Lyrics and Comment Section */}
             <div className="container my-5">
                 <div className="row">
-                    {/* Song Lyrics Section */}
-                    <div className="col-md-6">
-                        <p className="text-center">Baby, I like your style
+                    <div className="col-md-12">
+                        <p className="text-center">
+                        Baby, I like your style
                             Grips on your waist
                             Front way, back way
                             You know that I don't play
@@ -2047,70 +2382,252 @@ export const OneDance = () => {
                             Higher powers taking a hold on me
                         </p>
                     </div>
+                </div>
 
-                    {/* Comment Section */}
-                    <div className="col-md-6">
-                        {/* Social Media Style Comments */}
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/635359428/photo/new-york-ny-rumor-the-german-shepherd-poses-for-photos-after-winning-best-in-show-at-the.jpg?s=612x612&w=0&k=20&c=R8o1kV8KPl9z7QunBBgOHupjm_sY7n-U-7PFKKJZSC0="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude1:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">5 minutes ago</small>
-                            </div>
-                        </div>
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/85438939/photo/a-soft-coated-wheaten-terrier-dog-named-zoey-waits-for-the-start-of-a-parade-at-the-woofstock.jpg?s=612x612&w=0&k=20&c=n644q3tfcbFR1qEPG51O15KUiF3pMrKl5zuIY4V7sjk="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude2:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">10 minutes ago</small>
-                            </div>
-                        </div>
-                        {/* Comment Form */}
-                        <form>
-                            <div className="form-group mb-3">
+                {/* Comment Form */}
+                {userName && (
+                    <div className="row">
+                        <div className="col-md-12">
+                            <fieldset id="comment-controls">
                                 <textarea
                                     className="form-control"
-                                    id="commentBox"
-                                    name="commentBox"
                                     rows="4"
-                                    placeholder="share what you think is behind the beat"
-                                ></textarea>
+                                    placeholder="Share your thoughts on 'oneDance'!"
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                />
+                                <div className="text-center mt-3">
+                                    <button
+                                        type="submit"
+                                        onClick={handleCommentSubmit}
+                                        className="btn btn-primary comment"
+                                    >
+                                        Post Comment
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                )}
+
+                {/* Admin Delete All Comments Button */}
+                {isAdmin && (
+                    <div className="text-center mt-3">
+                        <button
+                            className="btn btn-danger"
+                            onClick={handleDeleteAllComments}
+                        >
+                            Delete All Comments
+                        </button>
+                    </div>
+                )}
+
+                 {/* Display Comments Section */}
+                 <div className="row">
+                    <div className="col-md-12">
+                        {comments.map((comment) => (
+                            <div className="d-flex align-items-start mb-4" key={comment.id}>
+                                <img
+                                    src="https://media.istockphoto.com/id/518552551/photo/male-silhouette-profile-picture-with-question-mark.jpg?b=1&s=612x612&w=0&k=20&c=L32hXWmACbW9z2pffVuIjWn720NWllGPJJI2galSiDQ="
+                                    alt="User Avatar"
+                                    className="small-avatar me-3"
+                                />
+                                <div className="border p-3 rounded w-100">
+                                    <p className="mb-1">
+                                        <strong>{comment.username}:</strong> {comment.text}
+                                    </p>
+                                    <div className="d-flex justify-content-between">
+                                        <button 
+                                            className="btn btn-sm btn-outline-primary"
+                                            onClick={() => handleLike(comment.id)}
+                                        >
+                                            👍 {comment.likes}
+                                        </button>
+                                        {comment.username === userName && (
+                                            <button 
+                                                className="btn btn-sm btn-outline-danger"
+                                                onClick={() => handleDelete(comment.id)}
+                                            >
+                                                🗑️ Delete
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                            <div className="text-center">
-                                <input type="submit" className="btn btn-primary" value="Comment" />
-                            </div>
-                        </form>
+                        ))}
                     </div>
                 </div>
             </div>
         </>
     );
 };
+// correct
+export const GodsPlan = () => { 
+    const [comments, setComments] = useState(() => {
+        const savedComments = localStorage.getItem('godsPlanComments');
+        return savedComments ? JSON.parse(savedComments) : [];
+    });
+    const [newComment, setNewComment] = useState('');
 
+    const userName = localStorage.getItem('userName');
+    const isAdmin = userName === 'noah@dunn'; // Check if the logged-in user is the admin
 
-export const GodsPlan = () => {
+    const [userLikes, setUserLikes] = useState(() => {
+        const savedLikes = localStorage.getItem('userLikes');
+        return savedLikes ? JSON.parse(savedLikes) : {};
+    });
+
+    const location = useLocation(); // Get the current route
+    const currentPage = location.pathname; // Get the current page path
+
+    useEffect(() => {
+        const ws = new WebSocket('ws://localhost:4000');
+
+        ws.onmessage = (event) => {
+            const messageData = JSON.parse(event.data);
+
+            if (messageData.type === 'comment') {
+                setComments((prevComments) => {
+                    const updatedComments = [...prevComments, messageData.comment];
+                    localStorage.setItem('godsPlanComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+            }
+
+            if (messageData.type === 'delete') {
+                setComments((prevComments) => {
+                    const updatedComments = prevComments.filter(comment => comment.id !== messageData.commentId);
+                    localStorage.setItem('godsPlanComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+            }
+
+            if (messageData.type === 'like') {
+                setComments((prevComments) => {
+                    const updatedComments = prevComments.map((comment) => {
+                        if (comment.id === messageData.commentId) {
+                            return { ...comment, likes: comment.likes + 1 };
+                        }
+                        return comment;
+                    });
+                    localStorage.setItem('godsPlanComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+                setUserLikes((prevLikes) => {
+                    const updatedLikes = { ...prevLikes, [messageData.commentId]: true };
+                    localStorage.setItem('userLikes', JSON.stringify(updatedLikes));
+                    return updatedLikes;
+                });
+            }
+        };
+
+        return () => {
+            ws.close();
+        };
+    }, []);
+
+    const handleCommentSubmit = (e) => {
+        e.preventDefault();
+        if (newComment.trim()) {
+            const commentData = {
+                type: 'comment',
+                comment: {
+                    username: userName ? userName : 'User',
+                    text: newComment,
+                    likes: 0,
+                    id: Date.now(),
+                }
+            };
+
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify(commentData));
+                setNewComment('');
+            };
+        }
+    };
+
+    const handleLike = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to like a comment');
+            return;
+        }
+
+        if (userLikes[commentId]) {
+            alert('You can only like a comment once');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({
+                type: 'like',
+                commentId: commentId,
+            }));
+        };
+    };
+
+    const handleDelete = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to delete a comment');
+            return;
+        }
+
+        const comment = comments.find(comment => comment.id === commentId);
+
+        if (comment && comment.username === userName) {
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    type: 'delete',
+                    commentId: commentId,
+                }));
+            };
+
+            setComments((prevComments) => {
+                const updatedComments = prevComments.filter((comment) => comment.id !== commentId);
+                localStorage.setItem('godsPlanComments', JSON.stringify(updatedComments));
+                return updatedComments;
+            });
+        } else {
+            alert('You can only delete your own comments');
+        }
+    };
+
+    // Admin functionality to delete all comments
+    const handleDeleteAllComments = () => {
+        if (!isAdmin) {
+            alert('You must be an admin to delete all comments');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({ type: 'deleteAll' }));
+        };
+
+        setComments([]); // Remove all comments locally
+        localStorage.setItem('godsPlanComments', JSON.stringify([])); // Clear from localStorage
+    };
+
+    // Only render comments for this specific page (godsPlan by Billie Eilish)
+    if (currentPage !== '/godsPlan') {
+        return null; // Don't render comments section for other pages
+    }
+
     return (
         <>
             <header className="py-5">
                 <div className="container text-center text-white">
-                    <h1 className="fw-bold" style={{ fontSize: '2rem' }}>God's Plan by Drake</h1>
+                    <h1 className="fw-bold" style={{ fontSize: '2rem' }}> God's Plan by Drake</h1>
                 </div>
             </header>
 
-            {/* Main Content: Lyrics and Comment Section */}
             <div className="container my-5">
                 <div className="row">
-                    {/* Song Lyrics Section */}
-                    <div className="col-md-6">
-                        <p className="text-center">And, they wishin' and wishin' and wishin' and wishin'
+                    <div className="col-md-12">
+                        <p className="text-center">
+                        And, they wishin' and wishin' and wishin' and wishin'
                             They wishin' on me, yeah
                             I been movin' calm, don't start no trouble with me
                             Tryna keep it peaceful is a struggle for me
@@ -2165,47 +2682,79 @@ export const GodsPlan = () => {
                             Yeah
                         </p>
                     </div>
+                </div>
 
-                    {/* Comment Section */}
-                    <div className="col-md-6">
-                        {/* Social Media Style Comments */}
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/635359428/photo/new-york-ny-rumor-the-german-shepherd-poses-for-photos-after-winning-best-in-show-at-the.jpg?s=612x612&w=0&k=20&c=R8o1kV8KPl9z7QunBBgOHupjm_sY7n-U-7PFKKJZSC0="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude1:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">5 minutes ago</small>
-                            </div>
-                        </div>
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/85438939/photo/a-soft-coated-wheaten-terrier-dog-named-zoey-waits-for-the-start-of-a-parade-at-the-woofstock.jpg?s=612x612&w=0&k=20&c=n644q3tfcbFR1qEPG51O15KUiF3pMrKl5zuIY4V7sjk="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude2:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">10 minutes ago</small>
-                            </div>
-                        </div>
-                        {/* Comment Form */}
-                        <form>
-                            <div className="form-group mb-3">
+                {/* Comment Form */}
+                {userName && (
+                    <div className="row">
+                        <div className="col-md-12">
+                            <fieldset id="comment-controls">
                                 <textarea
                                     className="form-control"
-                                    id="commentBox"
-                                    name="commentBox"
                                     rows="4"
-                                    placeholder="share what you think is behind the beat"
-                                ></textarea>
+                                    placeholder="Share your thoughts on 'godsPlan'!"
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                />
+                                <div className="text-center mt-3">
+                                    <button
+                                        type="submit"
+                                        onClick={handleCommentSubmit}
+                                        className="btn btn-primary comment"
+                                    >
+                                        Post Comment
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                )}
+
+                {/* Admin Delete All Comments Button */}
+                {isAdmin && (
+                    <div className="text-center mt-3">
+                        <button
+                            className="btn btn-danger"
+                            onClick={handleDeleteAllComments}
+                        >
+                            Delete All Comments
+                        </button>
+                    </div>
+                )}
+
+                 {/* Display Comments Section */}
+                 <div className="row">
+                    <div className="col-md-12">
+                        {comments.map((comment) => (
+                            <div className="d-flex align-items-start mb-4" key={comment.id}>
+                                <img
+                                    src="https://media.istockphoto.com/id/518552551/photo/male-silhouette-profile-picture-with-question-mark.jpg?b=1&s=612x612&w=0&k=20&c=L32hXWmACbW9z2pffVuIjWn720NWllGPJJI2galSiDQ="
+                                    alt="User Avatar"
+                                    className="small-avatar me-3"
+                                />
+                                <div className="border p-3 rounded w-100">
+                                    <p className="mb-1">
+                                        <strong>{comment.username}:</strong> {comment.text}
+                                    </p>
+                                    <div className="d-flex justify-content-between">
+                                        <button 
+                                            className="btn btn-sm btn-outline-primary"
+                                            onClick={() => handleLike(comment.id)}
+                                        >
+                                            👍 {comment.likes}
+                                        </button>
+                                        {comment.username === userName && (
+                                            <button 
+                                                className="btn btn-sm btn-outline-danger"
+                                                onClick={() => handleDelete(comment.id)}
+                                            >
+                                                🗑️ Delete
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                            <div className="text-center">
-                                <input type="submit" className="btn btn-primary" value="Comment" />
-                            </div>
-                        </form>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -2213,7 +2762,356 @@ export const GodsPlan = () => {
     );
 };
 
-//Kendrick Lamar
+export const MoneyTrees = () => { 
+    const [comments, setComments] = useState(() => {
+        const savedComments = localStorage.getItem('moneyTreesComments');
+        return savedComments ? JSON.parse(savedComments) : [];
+    });
+    const [newComment, setNewComment] = useState('');
+
+    const userName = localStorage.getItem('userName');
+    const isAdmin = userName === 'noah@dunn'; // Check if the logged-in user is the admin
+
+    const [userLikes, setUserLikes] = useState(() => {
+        const savedLikes = localStorage.getItem('userLikes');
+        return savedLikes ? JSON.parse(savedLikes) : {};
+    });
+
+    const location = useLocation(); // Get the current route
+    const currentPage = location.pathname; // Get the current page path
+
+    useEffect(() => {
+        const ws = new WebSocket('ws://localhost:4000');
+
+        ws.onmessage = (event) => {
+            const messageData = JSON.parse(event.data);
+
+            if (messageData.type === 'comment') {
+                setComments((prevComments) => {
+                    const updatedComments = [...prevComments, messageData.comment];
+                    localStorage.setItem('moneyTreesComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+            }
+
+            if (messageData.type === 'delete') {
+                setComments((prevComments) => {
+                    const updatedComments = prevComments.filter(comment => comment.id !== messageData.commentId);
+                    localStorage.setItem('moneyTreesComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+            }
+
+            if (messageData.type === 'like') {
+                setComments((prevComments) => {
+                    const updatedComments = prevComments.map((comment) => {
+                        if (comment.id === messageData.commentId) {
+                            return { ...comment, likes: comment.likes + 1 };
+                        }
+                        return comment;
+                    });
+                    localStorage.setItem('moneyTreesComments', JSON.stringify(updatedComments));
+                    return updatedComments;
+                });
+                setUserLikes((prevLikes) => {
+                    const updatedLikes = { ...prevLikes, [messageData.commentId]: true };
+                    localStorage.setItem('userLikes', JSON.stringify(updatedLikes));
+                    return updatedLikes;
+                });
+            }
+        };
+
+        return () => {
+            ws.close();
+        };
+    }, []);
+
+    const handleCommentSubmit = (e) => {
+        e.preventDefault();
+        if (newComment.trim()) {
+            const commentData = {
+                type: 'comment',
+                comment: {
+                    username: userName ? userName : 'User',
+                    text: newComment,
+                    likes: 0,
+                    id: Date.now(),
+                }
+            };
+
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify(commentData));
+                setNewComment('');
+            };
+        }
+    };
+
+    const handleLike = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to like a comment');
+            return;
+        }
+
+        if (userLikes[commentId]) {
+            alert('You can only like a comment once');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({
+                type: 'like',
+                commentId: commentId,
+            }));
+        };
+    };
+
+    const handleDelete = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to delete a comment');
+            return;
+        }
+
+        const comment = comments.find(comment => comment.id === commentId);
+
+        if (comment && comment.username === userName) {
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    type: 'delete',
+                    commentId: commentId,
+                }));
+            };
+
+            setComments((prevComments) => {
+                const updatedComments = prevComments.filter((comment) => comment.id !== commentId);
+                localStorage.setItem('moneyTreesComments', JSON.stringify(updatedComments));
+                return updatedComments;
+            });
+        } else {
+            alert('You can only delete your own comments');
+        }
+    };
+
+    // Admin functionality to delete all comments
+    const handleDeleteAllComments = () => {
+        if (!isAdmin) {
+            alert('You must be an admin to delete all comments');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({ type: 'deleteAll' }));
+        };
+
+        setComments([]); // Remove all comments locally
+        localStorage.setItem('moneyTreesComments', JSON.stringify([])); // Clear from localStorage
+    };
+
+    // Only render comments for this specific page (moneyTrees by Billie Eilish)
+    if (currentPage !== '/moneyTrees') {
+        return null; // Don't render comments section for other pages
+    }
+
+    return (
+        <>
+            <header className="py-5">
+                <div className="container text-center text-white">
+                    <h1 className="fw-bold" style={{ fontSize: '2rem' }}> Money Trees By Kendrick Lamar</h1>
+                </div>
+            </header>
+
+            <div className="container my-5">
+                <div className="row">
+                    <div className="col-md-12">
+                        <p className="text-center">
+                        Uh, me and my niggas tryna get it, ya bish (ya bish, ya bish)
+                            Hit the house lick, tell me, is you wit' it, ya bish? (Ya bish, ya bish)
+                            Home invasion was persuasive (was persuasive, was persuasive)
+                            From nine to five I know it's vacant, ya bish (ya bish, ya bish)
+                            Dreams of livin' life like rappers do (like rappers do, like rappers do)
+                            Back when condom wrappers wasn't cool (they wasn't cool, they wasn't cool)
+                            I fucked Sherane and went to tell my bros (tell my bros, tell my bros)
+                            Then Usher Raymond "Let It Burn" came on ("Let Burn" came on, "Let Burn" came on)
+                            Hot sauce all in our Top Ramen, ya bish (ya bish, ya bish)
+                            Park the car, then we start rhymin', ya bish (ya bish, ya bish)
+                            The only thing we had to free our mind (free our mind, free our mind)
+                            Then freeze that verse when we see dollar signs (see dollar signs, see dollar signs)
+                            You lookin' like an easy come-up, ya bish (ya bish, ya bish)
+                            A silver spoon, I know you come from, ya bish (ya bish, ya bish)
+                            And that's a lifestyle that we never knew (we never knew, we never knew)
+                            Go at a reverend for the revenue
+                            It go Halle Berry or hallelujah
+                            Pick your poison, tell me what you doin'
+                            Everybody gon' respect the shooter
+                            But the one in front of the gun lives forever (the one in front of the gun, forever)
+                            And I been hustlin' all-day, this-a-way, that-a-way
+                            Through canals and alleyways, just to say
+                            Money trees is the perfect place for shade, and that's jus' how I feel
+                            Nah, nah, a dollar might just fuck your main bitch
+                            That's jus' how I feel, nah
+                            A dollar might say fuck them niggas that you came with
+                            That's jus' how I feel, nah, nah
+                            A dollar might just make that lane switch
+                            That's jus' how I feel, nah
+                            A dollar might turn to a million and we all rich
+                            That's jus' how I feel
+                            Dreams of livin' life like rappers do (like rappers do, like rappers do)
+                            Bump that new E-40 after school (way after school, way after school)
+                            You know, "Big Ballin' With My Homies" (my homies)
+                            Earl Stevens had us thinkin' rational (thinkin' rational, that's rational)
+                            Back to reality, we poor, ya bish (ya bish, ya bish)
+                            Another casualty at war, ya bish (ya bish, ya bish)
+                            Two bullets in my Uncle Tony head (my Tony head, my Tony head)
+                            He said one day I'll be on tour, ya bish (ya bish, ya bish)
+                            That Louis Burgers never be the same (won't be the same, won't be the same)
+                            A Louis belt that never ease that pain (won't ease that pain, won't ease that pain)
+                            But I'ma purchase when that day is jerkin' (that day is jerkin', day is jerkin')
+                            Pull off at Church's, with Pirellis skirtin' (Pirellis skirtin', Pirellis skirtin')
+                            Gang signs out the window, ya bish (ya bish, ya bish)
+                            Hopin' all of 'em offend you, ya bish (ya bish, ya bish)
+                            They say yo' hood is a pot o' gold (a pot o' gold, a pot o' gold)
+                            And we gon' crash it when nobody's home
+                            It go Halle Berry or hallelujah
+                            Pick your poison, tell me what you doin'
+                            Everybody gon' respect the shooter
+                            But the one in front of the gun lives forever (the one in front of the gun, forever)
+                            And I been hustlin' all-day, this-a-way, that-a-way
+                            Through canals and alleyways, just to say
+                            Money trees is the perfect place for shade, and that's jus' how I feel
+                            Nah, nah, a dollar might just fuck your main bitch
+                            That's jus' how I feel, nah
+                            A dollar might say fuck them niggas that you came with
+                            That's jus' how I feel, nah, nah
+                            A dollar might just make that lane switch
+                            That's jus' how I feel, nah
+                            A dollar might turn to a million and we all rich
+                            That's jus' how I feel
+                            Be the last one out to get this dough? No way
+                            Love one of you bucket headed hoes? No way
+                            Hit the streets, then we break the code? No way
+                            Hit the brakes when they on patrol? No way
+                            Be the last one out to get this dough? No way
+                            Love one of you bucket headed hoes? No way
+                            Hit the streets, then we break the code? No way
+                            Hit the brakes when they on patrol? No way
+                            'Magine Rock up in 'em projects where 'em niggas pick your pockets
+                            Santa Claus don't miss 'em stockings, liquors spillin', pistols poppin'
+                            Bakin' soda YOLA whippin', ain't no turkey on Thanksgivin'
+                            My homeboy just dome'd a nigga, I just hope the Lord forgive him
+                            Pots with cocaine residue, every day I'm hustlin'
+                            What else is a thug to do when you eatin' cheese from the government?
+                            Gotta provide for my daughter 'nem get the fuck-up out my way, bitch
+                            Got that drum and I got them bands just like a parade, bitch
+                            Drop that work up in the bushes, hope them boys don't see my stash
+                            If they do, tell the truth, this the last time you might see my ass
+                            From the gardens where the grass ain't cut, them serpents lurkin', Blood
+                            Bitches sellin' pussy, niggas sellin' drugs, but it's all good
+                            Broken promises, steal your watch and tell you what time it is
+                            Take your J's and tell you to kick it where a Foot Locker is
+                            In the streets with a heater under my Dungarees
+                            Dreams of me gettin' shaded under a money tree
+                            It go Halle Berry or hallelujah
+                            Pick your poison, tell me what you doin'
+                            Everybody gon' respect the shooter
+                            But the one in front of the gun lives forever (the one in front of the gun, forever)
+                            And I been hustlin' all-day, this-a-way, that-a-way
+                            Through canals and alleyways, just to say
+                            Money trees is the perfect place for shade, and that's jus' how I feel
+                            Kendrick, just bring my car back, man, I-I called in for another appointment
+                            I figured you weren't gonna be back here on time anyway
+                            Look, shit-shit, I just wanna get out the house, man
+                            This man is on one, he feelin' good as a motherfucker
+                            Shit, I'm tryna get my thing goin', too, I'm goin' to Merlin' house
+                            Just bring my car back, shit, he faded, he feelin' good, look, listen to him (body, I want your body)
+                            'Cause you got a big ol' fat ass
+                            Girl, girl, I want your body, I want your body, 'cause of that big ol' fat ass
+                            (Girl) see, he high as hell, shit, and he ain't even trippin' off them dominoes no more
+                            Just bring the car back, did somebody say dominoes?
+                        </p>
+                    </div>
+                </div>
+
+                {/* Comment Form */}
+                {userName && (
+                    <div className="row">
+                        <div className="col-md-12">
+                            <fieldset id="comment-controls">
+                                <textarea
+                                    className="form-control"
+                                    rows="4"
+                                    placeholder="Share your thoughts on 'moneyTrees'!"
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                />
+                                <div className="text-center mt-3">
+                                    <button
+                                        type="submit"
+                                        onClick={handleCommentSubmit}
+                                        className="btn btn-primary comment"
+                                    >
+                                        Post Comment
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                )}
+
+                {/* Admin Delete All Comments Button */}
+                {isAdmin && (
+                    <div className="text-center mt-3">
+                        <button
+                            className="btn btn-danger"
+                            onClick={handleDeleteAllComments}
+                        >
+                            Delete All Comments
+                        </button>
+                    </div>
+                )}
+
+                 {/* Display Comments Section */}
+                 <div className="row">
+                    <div className="col-md-12">
+                        {comments.map((comment) => (
+                            <div className="d-flex align-items-start mb-4" key={comment.id}>
+                                <img
+                                    src="https://media.istockphoto.com/id/518552551/photo/male-silhouette-profile-picture-with-question-mark.jpg?b=1&s=612x612&w=0&k=20&c=L32hXWmACbW9z2pffVuIjWn720NWllGPJJI2galSiDQ="
+                                    alt="User Avatar"
+                                    className="small-avatar me-3"
+                                />
+                                <div className="border p-3 rounded w-100">
+                                    <p className="mb-1">
+                                        <strong>{comment.username}:</strong> {comment.text}
+                                    </p>
+                                    <div className="d-flex justify-content-between">
+                                        <button 
+                                            className="btn btn-sm btn-outline-primary"
+                                            onClick={() => handleLike(comment.id)}
+                                        >
+                                            👍 {comment.likes}
+                                        </button>
+                                        {comment.username === userName && (
+                                            <button 
+                                                className="btn btn-sm btn-outline-danger"
+                                                onClick={() => handleDelete(comment.id)}
+                                            >
+                                                🗑️ Delete
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+};
+
 export const NotLikeUs = () => {
     return (
         <>
@@ -2330,173 +3228,6 @@ export const NotLikeUs = () => {
                             Are we locked in?
                             Then step this way, step that way
                             Then step this way, step that way
-                        </p>
-                    </div>
-
-                    {/* Comment Section */}
-                    <div className="col-md-6">
-                        {/* Social Media Style Comments */}
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/635359428/photo/new-york-ny-rumor-the-german-shepherd-poses-for-photos-after-winning-best-in-show-at-the.jpg?s=612x612&w=0&k=20&c=R8o1kV8KPl9z7QunBBgOHupjm_sY7n-U-7PFKKJZSC0="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude1:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">5 minutes ago</small>
-                            </div>
-                        </div>
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/85438939/photo/a-soft-coated-wheaten-terrier-dog-named-zoey-waits-for-the-start-of-a-parade-at-the-woofstock.jpg?s=612x612&w=0&k=20&c=n644q3tfcbFR1qEPG51O15KUiF3pMrKl5zuIY4V7sjk="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude2:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">10 minutes ago</small>
-                            </div>
-                        </div>
-                        {/* Comment Form */}
-                        <form>
-                            <div className="form-group mb-3">
-                                <textarea
-                                    className="form-control"
-                                    id="commentBox"
-                                    name="commentBox"
-                                    rows="4"
-                                    placeholder="share what you think is behind the beat"
-                                ></textarea>
-                            </div>
-                            <div className="text-center">
-                                <input type="submit" className="btn btn-primary" value="Comment" />
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
-};
-
-export const MoneyTrees = () => {
-    return (
-        <>
-            <header className="py-5">
-                <div className="container text-center text-white">
-                    <h1 className="fw-bold" style={{ fontSize: '2rem' }}>Money Trees by Kendrick Lamar</h1>
-                </div>
-            </header>
-
-            {/* Main Content: Lyrics and Comment Section */}
-            <div className="container my-5">
-                <div className="row">
-                    {/* Song Lyrics Section */}
-                    <div className="col-md-6">
-                        <p className="text-center">Uh, me and my niggas tryna get it, ya bish (ya bish, ya bish)
-                            Hit the house lick, tell me, is you wit' it, ya bish? (Ya bish, ya bish)
-                            Home invasion was persuasive (was persuasive, was persuasive)
-                            From nine to five I know it's vacant, ya bish (ya bish, ya bish)
-                            Dreams of livin' life like rappers do (like rappers do, like rappers do)
-                            Back when condom wrappers wasn't cool (they wasn't cool, they wasn't cool)
-                            I fucked Sherane and went to tell my bros (tell my bros, tell my bros)
-                            Then Usher Raymond "Let It Burn" came on ("Let Burn" came on, "Let Burn" came on)
-                            Hot sauce all in our Top Ramen, ya bish (ya bish, ya bish)
-                            Park the car, then we start rhymin', ya bish (ya bish, ya bish)
-                            The only thing we had to free our mind (free our mind, free our mind)
-                            Then freeze that verse when we see dollar signs (see dollar signs, see dollar signs)
-                            You lookin' like an easy come-up, ya bish (ya bish, ya bish)
-                            A silver spoon, I know you come from, ya bish (ya bish, ya bish)
-                            And that's a lifestyle that we never knew (we never knew, we never knew)
-                            Go at a reverend for the revenue
-                            It go Halle Berry or hallelujah
-                            Pick your poison, tell me what you doin'
-                            Everybody gon' respect the shooter
-                            But the one in front of the gun lives forever (the one in front of the gun, forever)
-                            And I been hustlin' all-day, this-a-way, that-a-way
-                            Through canals and alleyways, just to say
-                            Money trees is the perfect place for shade, and that's jus' how I feel
-                            Nah, nah, a dollar might just fuck your main bitch
-                            That's jus' how I feel, nah
-                            A dollar might say fuck them niggas that you came with
-                            That's jus' how I feel, nah, nah
-                            A dollar might just make that lane switch
-                            That's jus' how I feel, nah
-                            A dollar might turn to a million and we all rich
-                            That's jus' how I feel
-                            Dreams of livin' life like rappers do (like rappers do, like rappers do)
-                            Bump that new E-40 after school (way after school, way after school)
-                            You know, "Big Ballin' With My Homies" (my homies)
-                            Earl Stevens had us thinkin' rational (thinkin' rational, that's rational)
-                            Back to reality, we poor, ya bish (ya bish, ya bish)
-                            Another casualty at war, ya bish (ya bish, ya bish)
-                            Two bullets in my Uncle Tony head (my Tony head, my Tony head)
-                            He said one day I'll be on tour, ya bish (ya bish, ya bish)
-                            That Louis Burgers never be the same (won't be the same, won't be the same)
-                            A Louis belt that never ease that pain (won't ease that pain, won't ease that pain)
-                            But I'ma purchase when that day is jerkin' (that day is jerkin', day is jerkin')
-                            Pull off at Church's, with Pirellis skirtin' (Pirellis skirtin', Pirellis skirtin')
-                            Gang signs out the window, ya bish (ya bish, ya bish)
-                            Hopin' all of 'em offend you, ya bish (ya bish, ya bish)
-                            They say yo' hood is a pot o' gold (a pot o' gold, a pot o' gold)
-                            And we gon' crash it when nobody's home
-                            It go Halle Berry or hallelujah
-                            Pick your poison, tell me what you doin'
-                            Everybody gon' respect the shooter
-                            But the one in front of the gun lives forever (the one in front of the gun, forever)
-                            And I been hustlin' all-day, this-a-way, that-a-way
-                            Through canals and alleyways, just to say
-                            Money trees is the perfect place for shade, and that's jus' how I feel
-                            Nah, nah, a dollar might just fuck your main bitch
-                            That's jus' how I feel, nah
-                            A dollar might say fuck them niggas that you came with
-                            That's jus' how I feel, nah, nah
-                            A dollar might just make that lane switch
-                            That's jus' how I feel, nah
-                            A dollar might turn to a million and we all rich
-                            That's jus' how I feel
-                            Be the last one out to get this dough? No way
-                            Love one of you bucket headed hoes? No way
-                            Hit the streets, then we break the code? No way
-                            Hit the brakes when they on patrol? No way
-                            Be the last one out to get this dough? No way
-                            Love one of you bucket headed hoes? No way
-                            Hit the streets, then we break the code? No way
-                            Hit the brakes when they on patrol? No way
-                            'Magine Rock up in 'em projects where 'em niggas pick your pockets
-                            Santa Claus don't miss 'em stockings, liquors spillin', pistols poppin'
-                            Bakin' soda YOLA whippin', ain't no turkey on Thanksgivin'
-                            My homeboy just dome'd a nigga, I just hope the Lord forgive him
-                            Pots with cocaine residue, every day I'm hustlin'
-                            What else is a thug to do when you eatin' cheese from the government?
-                            Gotta provide for my daughter 'nem get the fuck-up out my way, bitch
-                            Got that drum and I got them bands just like a parade, bitch
-                            Drop that work up in the bushes, hope them boys don't see my stash
-                            If they do, tell the truth, this the last time you might see my ass
-                            From the gardens where the grass ain't cut, them serpents lurkin', Blood
-                            Bitches sellin' pussy, niggas sellin' drugs, but it's all good
-                            Broken promises, steal your watch and tell you what time it is
-                            Take your J's and tell you to kick it where a Foot Locker is
-                            In the streets with a heater under my Dungarees
-                            Dreams of me gettin' shaded under a money tree
-                            It go Halle Berry or hallelujah
-                            Pick your poison, tell me what you doin'
-                            Everybody gon' respect the shooter
-                            But the one in front of the gun lives forever (the one in front of the gun, forever)
-                            And I been hustlin' all-day, this-a-way, that-a-way
-                            Through canals and alleyways, just to say
-                            Money trees is the perfect place for shade, and that's jus' how I feel
-                            Kendrick, just bring my car back, man, I-I called in for another appointment
-                            I figured you weren't gonna be back here on time anyway
-                            Look, shit-shit, I just wanna get out the house, man
-                            This man is on one, he feelin' good as a motherfucker
-                            Shit, I'm tryna get my thing goin', too, I'm goin' to Merlin' house
-                            Just bring my car back, shit, he faded, he feelin' good, look, listen to him (body, I want your body)
-                            'Cause you got a big ol' fat ass
-                            Girl, girl, I want your body, I want your body, 'cause of that big ol' fat ass
-                            (Girl) see, he high as hell, shit, and he ain't even trippin' off them dominoes no more
-                            Just bring the car back, did somebody say dominoes?
                         </p>
                     </div>
 
