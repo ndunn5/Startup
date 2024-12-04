@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './songs.css';
+import { useLocation } from 'react-router-dom'; // If you're using React Router for page routing
 
-const userName = localStorage.getItem('userName');
+
 
 //taylor swift
 export const BlankSpace = () => {
@@ -498,50 +499,44 @@ export const Lovely = () => {
 
 export const Blue = () => {
     const [comments, setComments] = useState(() => {
-        // Retrieve stored comments from localStorage, if any
         const savedComments = localStorage.getItem('comments');
         return savedComments ? JSON.parse(savedComments) : [];
     });
     const [newComment, setNewComment] = useState('');
 
-    // Retrieve the logged-in username from localStorage
     const userName = localStorage.getItem('userName');
-    
-    // Track the user's likes locally to prevent multiple likes
+    const isAdmin = userName === 'noah@dunn'; // Check if the logged-in user is the admin
+
     const [userLikes, setUserLikes] = useState(() => {
         const savedLikes = localStorage.getItem('userLikes');
         return savedLikes ? JSON.parse(savedLikes) : {};
     });
 
-    // WebSocket connection for comments
-    useEffect(() => {
-        const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
+    const location = useLocation(); // Get the current route
+    const currentPage = location.pathname; // Get the current page path
 
-        // Listen for incoming messages
+    useEffect(() => {
+        const ws = new WebSocket('ws://localhost:4000');
+
         ws.onmessage = (event) => {
             const messageData = JSON.parse(event.data);
 
-            // Handling incoming comment messages
             if (messageData.type === 'comment') {
                 setComments((prevComments) => {
                     const updatedComments = [...prevComments, messageData.comment];
-                    // Store the updated comments in localStorage
                     localStorage.setItem('comments', JSON.stringify(updatedComments));
                     return updatedComments;
                 });
             }
 
-            // Handling deletion of comments
             if (messageData.type === 'delete') {
                 setComments((prevComments) => {
                     const updatedComments = prevComments.filter(comment => comment.id !== messageData.commentId);
-                    // Update localStorage with the remaining comments
                     localStorage.setItem('comments', JSON.stringify(updatedComments));
                     return updatedComments;
                 });
             }
 
-            // Handling likes update
             if (messageData.type === 'like') {
                 setComments((prevComments) => {
                     const updatedComments = prevComments.map((comment) => {
@@ -550,11 +545,9 @@ export const Blue = () => {
                         }
                         return comment;
                     });
-                    // Store the updated comments in localStorage
                     localStorage.setItem('comments', JSON.stringify(updatedComments));
                     return updatedComments;
                 });
-                // Update userLikes to reflect the liked comment
                 setUserLikes((prevLikes) => {
                     const updatedLikes = { ...prevLikes, [messageData.commentId]: true };
                     localStorage.setItem('userLikes', JSON.stringify(updatedLikes));
@@ -563,7 +556,6 @@ export const Blue = () => {
             }
         };
 
-        // Cleanup WebSocket connection when component unmounts
         return () => {
             ws.close();
         };
@@ -572,73 +564,63 @@ export const Blue = () => {
     const handleCommentSubmit = (e) => {
         e.preventDefault();
         if (newComment.trim()) {
-            // Create a comment object with the username and message
             const commentData = {
                 type: 'comment',
                 comment: {
                     username: userName ? userName : 'User',
                     text: newComment,
-                    likes: 0, // Initial likes count
-                    id: Date.now(), // Unique ID for the comment
+                    likes: 0,
+                    id: Date.now(),
                 }
             };
 
-            // Send the comment to the WebSocket server
-            const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
+            const ws = new WebSocket('ws://localhost:4000');
             ws.onopen = () => {
-                ws.send(JSON.stringify(commentData)); // Send the comment with the username
-                setNewComment(''); // Clear the input field after sending the comment
+                ws.send(JSON.stringify(commentData));
+                setNewComment('');
             };
         }
     };
 
-    // Handle liking a comment
     const handleLike = (commentId) => {
         if (!userName) {
             alert('You must be logged in to like a comment');
             return;
         }
 
-        // Prevent a user from liking a comment multiple times
         if (userLikes[commentId]) {
             alert('You can only like a comment once');
             return;
         }
 
-        // Send the like message to the WebSocket server
-        const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
+        const ws = new WebSocket('ws://localhost:4000');
         ws.onopen = () => {
             ws.send(JSON.stringify({
                 type: 'like',
-                commentId: commentId, // Send the comment ID to increment likes
+                commentId: commentId,
             }));
         };
     };
 
-    // Handle deleting a comment
     const handleDelete = (commentId) => {
         if (!userName) {
             alert('You must be logged in to delete a comment');
             return;
         }
 
-        // Find the comment to check if the logged-in user is the owner
         const comment = comments.find(comment => comment.id === commentId);
 
         if (comment && comment.username === userName) {
-            // Send the delete message to the WebSocket server
-            const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
+            const ws = new WebSocket('ws://localhost:4000');
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     type: 'delete',
-                    commentId: commentId, // Send the comment ID to delete
+                    commentId: commentId,
                 }));
             };
 
-            // Optimistically remove the comment from local state
             setComments((prevComments) => {
                 const updatedComments = prevComments.filter((comment) => comment.id !== commentId);
-                // Update localStorage with the remaining comments
                 localStorage.setItem('comments', JSON.stringify(updatedComments));
                 return updatedComments;
             });
@@ -646,6 +628,27 @@ export const Blue = () => {
             alert('You can only delete your own comments');
         }
     };
+
+    // Admin functionality to delete all comments
+    const handleDeleteAllComments = () => {
+        if (!isAdmin) {
+            alert('You must be an admin to delete all comments');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({ type: 'deleteAll' }));
+        };
+
+        setComments([]); // Remove all comments locally
+        localStorage.setItem('comments', JSON.stringify([])); // Clear from localStorage
+    };
+
+    // Only render comments for this specific page (Blue by Billie Eilish)
+    if (currentPage !== '/blue') {
+        return null; // Don't render comments section for other pages
+    }
 
     return (
         <>
@@ -657,41 +660,100 @@ export const Blue = () => {
 
             <div className="container my-5">
                 <div className="row">
-                    {/* Song Lyrics Section */}
                     <div className="col-md-12">
                         <p className="text-center">
-                            {/* Add the lyrics here */}
-                            Mm, mm, mm
-                            I try to live in black and white, but I'm so blue
-                            {/* ... */}
+                        Mm, mm, mm
+I try to live in black and white, but I'm so blue
+I'd like to mean it when I say I'm over you
+But that's still not true (blue)
+And I'm still so blue, oh
+I thought we were the same (I thought we were the same)
+Birds of a feather (birds of a feather), now I'm ashamed
+I told you a lie, désolé, mon amour
+I'm trying my best, don't know what's in store
+Open up the door (blue)
+In the back of my mind, I'm still overseas
+A bird in a cage, thought you were made for me
+I try (I'm not what) to live in black and white
+But I'm so blue (but I'm not what you need)
+I'd like (not what you need) to mean it when I say I'm over you
+But that's still not true, true
+And I'm still so blue (and it's not true)
+I'm true blue, true blue
+I'm true blue
+mm, mm, mm
+Ah-ah
+Ah-ah-ah-ah
+Ah-ah
+You were born bluer than a butterfly
+Beautiful and so deprived of oxygen
+Colder than your father's eyes
+He never learned to sympathize with anyone
+I don't blame you
+But I can't change you
+Don't hate you (don't hate you)
+But we can't save you (but we can't save you)
+You were born reaching for your mother's hands
+Victim of your father's plans to rule the world
+Too afraid to step outside
+Paranoid and petrified of what you've heard
+But they could say the same 'bout me
+I sleep 'bout three hours each night
+Means only 21 a week now, now
+And I could say the same 'bout you
+Born blameless, grew up famous too
+Just a baby born blue now, now
+I don't blame you (I don't blame you)
+But I can't change you
+Don't hate you
+But we can't save you (we can't save you)
+Ooh-ooh
+It's over now
+It's over now
+It's over now
+(Ah-ah-ah, ah)
+But when can I hear the next one?
                         </p>
                     </div>
                 </div>
 
-                {/* Comments Section */}
-                <div className="row">
-                    <div className="col-md-12">
-                        {/* Comment Form */}
-                        <fieldset id="comment-controls">
-                            <textarea
-                                className="form-control"
-                                rows="4"
-                                placeholder="Share what you think is behind the beat!"
-                                value={newComment}
-                                onChange={(e) => setNewComment(e.target.value)}
-                            />
-                            <div className="text-center mt-3">
-                                <button
-                                    type="submit"
-                                    onClick={handleCommentSubmit}
-                                    className="btn btn-primary comment"
-                                >
-                                    Post Comment
-                                </button>
-                            </div>
-                        </fieldset>
+                {/* Comment Form */}
+                {userName && (
+                    <div className="row">
+                        <div className="col-md-12">
+                            <fieldset id="comment-controls">
+                                <textarea
+                                    className="form-control"
+                                    rows="4"
+                                    placeholder="Share what you think is behind the beat!"
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                />
+                                <div className="text-center mt-3">
+                                    <button
+                                        type="submit"
+                                        onClick={handleCommentSubmit}
+                                        className="btn btn-primary comment"
+                                    >
+                                        Post Comment
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </div>
                     </div>
-                </div>
+                )}
+
+                {/* Admin Delete All Comments Button */}
+                {isAdmin && (
+                    <div className="text-center mt-3">
+                        <button
+                            className="btn btn-danger"
+                            onClick={handleDeleteAllComments}
+                        >
+                            Delete All Comments
+                        </button>
+                    </div>
+                )}
 
                 {/* Display Comments Section */}
                 <div className="row">
@@ -708,15 +770,12 @@ export const Blue = () => {
                                         <strong>{comment.username}:</strong> {comment.text}
                                     </p>
                                     <div className="d-flex justify-content-between">
-                                        {/* Like Button */}
                                         <button 
                                             className="btn btn-sm btn-outline-primary"
                                             onClick={() => handleLike(comment.id)}
                                         >
                                             👍 {comment.likes}
                                         </button>
-                                        
-                                        {/* Delete Button */}
                                         {comment.username === userName && (
                                             <button 
                                                 className="btn btn-sm btn-outline-danger"
@@ -735,6 +794,8 @@ export const Blue = () => {
         </>
     );
 };
+
+
 
 
 export const Lunch = () => {
