@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
+
+
 
 //taylor swift
 export const BlankSpace = () => {
@@ -492,7 +495,66 @@ export const Lovely = () => {
         </>
     );
 };
+
 export const Blue = () => {
+    const [comments, setComments] = useState(() => {
+        // Retrieve stored comments from localStorage, if any
+        const savedComments = localStorage.getItem('comments');
+        return savedComments ? JSON.parse(savedComments) : [];
+    });
+    const [newComment, setNewComment] = useState('');
+    const [chatMessage, setChatMessage] = useState('');
+    const [chatLog, setChatLog] = useState(() => {
+        // Retrieve stored chat log from localStorage, if any
+        const savedChatLog = localStorage.getItem('chatLog');
+        return savedChatLog ? JSON.parse(savedChatLog) : [];
+    });
+
+    // WebSocket connection
+    useEffect(() => {
+        const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
+
+        // Listen for incoming messages
+        ws.onmessage = (event) => {
+            const newMessage = event.data;
+            setChatLog((prevChatLog) => {
+                const updatedChatLog = [...prevChatLog, newMessage];
+                // Store the updated chatLog in localStorage
+                localStorage.setItem('chatLog', JSON.stringify(updatedChatLog));
+                return updatedChatLog;
+            });
+        };
+
+        // Cleanup WebSocket connection when component unmounts
+        return () => {
+            ws.close();
+        };
+    }, []);
+
+    const handleCommentSubmit = (e) => {
+        e.preventDefault();
+        if (newComment.trim()) {
+            setComments((prevComments) => {
+                const updatedComments = [...prevComments, newComment];
+                // Store the updated comments in localStorage
+                localStorage.setItem('comments', JSON.stringify(updatedComments));
+                return updatedComments;
+            });
+            setNewComment('');
+        }
+    };
+
+    const sendMessage = () => {
+        if (chatMessage.trim()) {
+            // Send the message to the WebSocket server
+            const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
+            ws.onopen = () => {
+                ws.send(chatMessage);  // Send chatMessage to WebSocket server
+                setChatMessage('');     // Clear the input field after sending the message
+            };
+        }
+    };
+
     return (
         <>
             <header className="py-5">
@@ -501,110 +563,71 @@ export const Blue = () => {
                 </div>
             </header>
 
-            {/* Main Content: Lyrics and Comment Section */}
             <div className="container my-5">
                 <div className="row">
                     {/* Song Lyrics Section */}
                     <div className="col-md-6">
-                        <p className="text-center">Mm, mm, mm
-                            I try to live in black and white, but I'm so blue
-                            I'd like to mean it when I say I'm over you
-                            But that's still not true (blue)
-                            And I'm still so blue, oh
-                            I thought we were the same (I thought we were the same)
-                            Birds of a feather (birds of a feather), now I'm ashamed
-                            I told you a lie, désolé, mon amour
-                            I'm trying my best, don't know what's in store
-                            Open up the door (blue)
-                            In the back of my mind, I'm still overseas
-                            A bird in a cage, thought you were made for me
-                            I try (I'm not what) to live in black and white, but I'm so blue
-                            I'd like to mean it when I say I'm over you
-                            But that's still not true, true
-                            And I'm still so blue
-                            I'm true blue, true blue
-                            I'm true blue
-                            mm, mm, mm
-                            Ah-ah
-                            Ah-ah-ah-ah
-                            Ah-ah
-                            You were born bluer than a butterfly
-                            Beautiful and so deprived of oxygen
-                            Colder than your father's eyes
-                            He never learned to sympathize with anyone
-                            I don't blame you
-                            But I can't change you
-                            Don't hate you (don't hate you)
-                            But we can't save you (but we can't save you)
-                            You were born reaching for your mother's hands
-                            Victim of your father's plans to rule the world
-                            Too afraid to step outside
-                            Paranoid and petrified of what you've heard
-                            But they could say the same 'bout me
-                            I sleep 'bout three hours each night
-                            Means only 21 a week now, now
-                            And I could say the same 'bout you
-                            Born blameless, grew up famous too
-                            Just a baby born blue now, now
-                            I don't blame you
-                            But I can't change you
-                            Don't hate you
-                            But we can't save you
-                            Ooh-ooh
-                            It's over now
-                            It's over now
-                            It's over now
-                            (Ah-ah-ah, ah)
-                            But when can I hear the next one?
+                        <p className="text-center">
+                            {/* Add the lyrics here */}
+                            Mm, mm, mm...
                         </p>
                     </div>
 
                     {/* Comment Section */}
                     <div className="col-md-6">
-                        {/* Social Media Style Comments */}
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/635359428/photo/new-york-ny-rumor-the-german-shepherd-poses-for-photos-after-winning-best-in-show-at-the.jpg?s=612x612&w=0&k=20&c=R8o1kV8KPl9z7QunBBgOHupjm_sY7n-U-7PFKKJZSC0="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude1:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">5 minutes ago</small>
+                        {/* Existing Comments */}
+                        {comments.map((comment, index) => (
+                            <div className="d-flex align-items-start mb-4" key={index}>
+                                <img
+                                    src="https://via.placeholder.com/50"
+                                    alt="User Avatar"
+                                    className="small-avatar me-3"
+                                />
+                                <div className="border p-3 rounded w-100">
+                                    <p className="mb-1"><strong>User:</strong> {comment}</p>
+                                </div>
                             </div>
-                        </div>
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/85438939/photo/a-soft-coated-wheaten-terrier-dog-named-zoey-waits-for-the-start-of-a-parade-at-the-woofstock.jpg?s=612x612&w=0&k=20&c=n644q3tfcbFR1qEPG51O15KUiF3pMrKl5zuIY4V7sjk="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude2:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">10 minutes ago</small>
-                            </div>
-                        </div>
+                        ))}
+
                         {/* Comment Form */}
-                        <form>
+                        <form onSubmit={handleCommentSubmit}>
                             <div className="form-group mb-3">
                                 <textarea
                                     className="form-control"
-                                    id="commentBox"
-                                    name="commentBox"
                                     rows="4"
-                                    placeholder="share what you think is behind the beat"
+                                    placeholder="Share what you think is behind the beat"
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
                                 ></textarea>
                             </div>
                             <div className="text-center">
-                                <input type="submit" className="btn btn-primary" value="Comment" />
+                                <button type="submit" className="btn btn-primary">Comment</button>
                             </div>
                         </form>
                     </div>
+                </div>
+
+                {/* Chat Section */}
+                <fieldset id="chat-controls">
+                    <legend>Chat</legend>
+                    <input
+                        id="new-msg"
+                        type="text"
+                        value={chatMessage}
+                        onChange={(e) => setChatMessage(e.target.value)}
+                    />
+                    <button onClick={sendMessage}>Comment</button>
+                </fieldset>
+                <div id="chat-text">
+                    {chatLog.map((msg, index) => (
+                        <p key={index}>{msg}</p>
+                    ))}
                 </div>
             </div>
         </>
     );
 };
+
 export const Lunch = () => {
     return (
         <>
