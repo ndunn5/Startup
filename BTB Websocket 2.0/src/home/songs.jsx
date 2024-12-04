@@ -497,32 +497,26 @@ export const Lovely = () => {
 };
 
 export const Blue = () => {
-    const [comments, setComments] = useState(() => {
-        // Retrieve stored comments from localStorage, if any
-        const savedComments = localStorage.getItem('comments');
-        return savedComments ? JSON.parse(savedComments) : [];
-    });
+    const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
     const [chatMessage, setChatMessage] = useState('');
-    const [chatLog, setChatLog] = useState(() => {
-        // Retrieve stored chat log from localStorage, if any
-        const savedChatLog = localStorage.getItem('chatLog');
-        return savedChatLog ? JSON.parse(savedChatLog) : [];
-    });
+    const [chatLog, setChatLog] = useState([]);
 
-    // WebSocket connection
+    // WebSocket connection for comments and chat
     useEffect(() => {
         const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
 
-        // Listen for incoming messages
+        // Listen for incoming chat messages
         ws.onmessage = (event) => {
-            const newMessage = event.data;
-            setChatLog((prevChatLog) => {
-                const updatedChatLog = [...prevChatLog, newMessage];
-                // Store the updated chatLog in localStorage
-                localStorage.setItem('chatLog', JSON.stringify(updatedChatLog));
-                return updatedChatLog;
-            });
+            const messageData = JSON.parse(event.data);
+
+            if (messageData.type === 'chat') {
+                setChatLog((prevChatLog) => [...prevChatLog, messageData.message]);
+            }
+
+            if (messageData.type === 'comment') {
+                setComments((prevComments) => [...prevComments, messageData.comment]);
+            }
         };
 
         // Cleanup WebSocket connection when component unmounts
@@ -531,26 +525,25 @@ export const Blue = () => {
         };
     }, []);
 
-    const handleCommentSubmit = (e) => {
-        e.preventDefault();
-        if (newComment.trim()) {
-            setComments((prevComments) => {
-                const updatedComments = [...prevComments, newComment];
-                // Store the updated comments in localStorage
-                localStorage.setItem('comments', JSON.stringify(updatedComments));
-                return updatedComments;
-            });
-            setNewComment('');
+    const sendMessage = () => {
+        if (chatMessage.trim()) {
+            // Send chat message to the WebSocket server
+            const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
+            ws.onopen = () => {
+                ws.send(JSON.stringify({ type: 'chat', message: chatMessage }));
+                setChatMessage(''); // Clear the input field after sending the message
+            };
         }
     };
 
-    const sendMessage = () => {
-        if (chatMessage.trim()) {
-            // Send the message to the WebSocket server
+    const handleCommentSubmit = (e) => {
+        e.preventDefault();
+        if (newComment.trim()) {
+            // Send the comment to the WebSocket server
             const ws = new WebSocket('ws://localhost:4000'); // Replace with your WebSocket server URL
             ws.onopen = () => {
-                ws.send(chatMessage);  // Send chatMessage to WebSocket server
-                setChatMessage('');     // Clear the input field after sending the message
+                ws.send(JSON.stringify({ type: 'comment', comment: newComment }));
+                setNewComment(''); // Clear the input field after sending the comment
             };
         }
     };
@@ -566,16 +559,37 @@ export const Blue = () => {
             <div className="container my-5">
                 <div className="row">
                     {/* Song Lyrics Section */}
-                    <div className="col-md-6">
+                    <div className="col-md-12">
                         <p className="text-center">
                             {/* Add the lyrics here */}
                             Mm, mm, mm...
                         </p>
                     </div>
+                </div>
 
-                    {/* Comment Section */}
-                    <div className="col-md-6">
-                        {/* Existing Comments */}
+                {/* Comments Section */}
+                <div className="row">
+                    <div className="col-md-12">
+                        {/* Comment Form */}
+                        <fieldset id="comment-controls">
+                            <legend>Share your thoughts</legend>
+                            <textarea
+                                className="form-control"
+                                rows="4"
+                                placeholder="What's on your mind?"
+                                value={newComment}
+                                onChange={(e) => setNewComment(e.target.value)}
+                            />
+                            <div className="text-center mt-3">
+                                <button type="submit" onClick={handleCommentSubmit} className="btn btn-primary">Post Comment</button>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                {/* Display Comments Section */}
+                <div className="row">
+                    <div className="col-md-12">
                         {comments.map((comment, index) => (
                             <div className="d-flex align-items-start mb-4" key={index}>
                                 <img
@@ -588,45 +602,14 @@ export const Blue = () => {
                                 </div>
                             </div>
                         ))}
-
-                        {/* Comment Form */}
-                        <form onSubmit={handleCommentSubmit}>
-                            <div className="form-group mb-3">
-                                <textarea
-                                    className="form-control"
-                                    rows="4"
-                                    placeholder="Share what you think is behind the beat"
-                                    value={newComment}
-                                    onChange={(e) => setNewComment(e.target.value)}
-                                ></textarea>
-                            </div>
-                            <div className="text-center">
-                                <button type="submit" className="btn btn-primary">Comment</button>
-                            </div>
-                        </form>
                     </div>
                 </div>
 
-                {/* Chat Section */}
-                <fieldset id="chat-controls">
-                    <legend>Chat</legend>
-                    <input
-                        id="new-msg"
-                        type="text"
-                        value={chatMessage}
-                        onChange={(e) => setChatMessage(e.target.value)}
-                    />
-                    <button onClick={sendMessage}>Comment</button>
-                </fieldset>
-                <div id="chat-text">
-                    {chatLog.map((msg, index) => (
-                        <p key={index}>{msg}</p>
-                    ))}
-                </div>
-            </div>
+                    </div>
         </>
     );
 };
+
 
 export const Lunch = () => {
     return (
