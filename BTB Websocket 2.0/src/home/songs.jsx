@@ -272,7 +272,7 @@ export const BlankSpace = () => {
                                 <textarea
                                     className="form-control"
                                     rows="4"
-                                    placeholder="Share your thoughts on this song!"
+                                    placeholder="What do you think is behind the beat?"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
@@ -342,10 +342,12 @@ export const BlankSpace = () => {
     );
 };
 
+// revised
+
 
 export const ShakeItOff = () => {
     const [comments, setComments] = useState(() => {
-        const savedComments = localStorage.getItem('shakeItOffComments');
+        const savedComments = localStorage.getItem('shakeItOff_comments');
         return savedComments ? JSON.parse(savedComments) : [];
     });
     const [newComment, setNewComment] = useState('');
@@ -368,37 +370,43 @@ export const ShakeItOff = () => {
             const messageData = JSON.parse(event.data);
 
             if (messageData.type === 'comment') {
-                setComments((prevComments) => {
-                    const updatedComments = [...prevComments, messageData.comment];
-                    localStorage.setItem('shakeItOffComments', JSON.stringify(updatedComments));
-                    return updatedComments;
-                });
+                if (messageData.page === '/shakeItOff') {
+                    setComments((prevComments) => {
+                        const updatedComments = [...prevComments, messageData.comment];
+                        localStorage.setItem('shakeItOff_comments', JSON.stringify(updatedComments));
+                        return updatedComments;
+                    });
+                }
             }
 
             if (messageData.type === 'delete') {
-                setComments((prevComments) => {
-                    const updatedComments = prevComments.filter(comment => comment.id !== messageData.commentId);
-                    localStorage.setItem('shakeItOffComments', JSON.stringify(updatedComments));
-                    return updatedComments;
-                });
+                if (messageData.page === '/shakeItOff') {
+                    setComments((prevComments) => {
+                        const updatedComments = prevComments.filter(comment => comment.id !== messageData.commentId);
+                        localStorage.setItem('shakeItOff_comments', JSON.stringify(updatedComments));
+                        return updatedComments;
+                    });
+                }
             }
 
             if (messageData.type === 'like') {
-                setComments((prevComments) => {
-                    const updatedComments = prevComments.map((comment) => {
-                        if (comment.id === messageData.commentId) {
-                            return { ...comment, likes: comment.likes + 1 };
-                        }
-                        return comment;
+                if (messageData.page === '/shakeItOff') {
+                    setComments((prevComments) => {
+                        const updatedComments = prevComments.map((comment) => {
+                            if (comment.id === messageData.commentId) {
+                                return { ...comment, likes: comment.likes + 1 };
+                            }
+                            return comment;
+                        });
+                        localStorage.setItem('shakeItOff_comments', JSON.stringify(updatedComments));
+                        return updatedComments;
                     });
-                    localStorage.setItem('shakeItOffComments', JSON.stringify(updatedComments));
-                    return updatedComments;
-                });
-                setUserLikes((prevLikes) => {
-                    const updatedLikes = { ...prevLikes, [messageData.commentId]: true };
-                    localStorage.setItem('userLikes', JSON.stringify(updatedLikes));
-                    return updatedLikes;
-                });
+                    setUserLikes((prevLikes) => {
+                        const updatedLikes = { ...prevLikes, [messageData.commentId]: true };
+                        localStorage.setItem('userLikes', JSON.stringify(updatedLikes));
+                        return updatedLikes;
+                    });
+                }
             }
         };
 
@@ -412,6 +420,7 @@ export const ShakeItOff = () => {
         if (newComment.trim()) {
             const commentData = {
                 type: 'comment',
+                page: '/shakeItOff',
                 comment: {
                     username: userName ? userName : 'User',
                     text: newComment,
@@ -444,6 +453,7 @@ export const ShakeItOff = () => {
             ws.send(JSON.stringify({
                 type: 'like',
                 commentId: commentId,
+                page: '/shakeItOff',
             }));
         };
     };
@@ -462,12 +472,13 @@ export const ShakeItOff = () => {
                 ws.send(JSON.stringify({
                     type: 'delete',
                     commentId: commentId,
+                    page: '/shakeItOff',
                 }));
             };
 
             setComments((prevComments) => {
                 const updatedComments = prevComments.filter((comment) => comment.id !== commentId);
-                localStorage.setItem('shakeItOffComments', JSON.stringify(updatedComments));
+                localStorage.setItem('shakeItOff_comments', JSON.stringify(updatedComments));
                 return updatedComments;
             });
         } else {
@@ -484,11 +495,11 @@ export const ShakeItOff = () => {
 
         const ws = new WebSocket('ws://localhost:4000');
         ws.onopen = () => {
-            ws.send(JSON.stringify({ type: 'deleteAll' }));
+            ws.send(JSON.stringify({ type: 'deleteAll', page: '/shakeItOff' }));
         };
 
         setComments([]); // Remove all comments locally
-        localStorage.setItem('shakeItOffComments', JSON.stringify([])); // Clear from localStorage
+        localStorage.setItem('shakeItOff_comments', JSON.stringify([])); // Clear from localStorage
     };
 
     // Only render comments for this specific page (shakeItOff by Billie Eilish)
@@ -508,7 +519,8 @@ export const ShakeItOff = () => {
                 <div className="row">
                     <div className="col-md-12">
                         <p className="text-center">
-                        Fever dream high in the quiet of the night
+                            {/* Lyrics for the song */}
+                            Fever dream high in the quiet of the night
                             You know that I caught it
                             Bad, bad boy
                             Shiny toy with a price
@@ -571,6 +583,7 @@ export const ShakeItOff = () => {
                             And I screamed for whatever it's worth
                             "I love you, " ain't that the worst thing you ever heard?
                             (Yeah, yeah, yeah, yeah)
+                            {/* Rest of the lyrics */}
                         </p>
                     </div>
                 </div>
@@ -583,7 +596,7 @@ export const ShakeItOff = () => {
                                 <textarea
                                     className="form-control"
                                     rows="4"
-                                    placeholder="Share your thoughts on 'shakeItOff'!"
+                                    placeholder="What do you think is behind the beat?"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
@@ -613,8 +626,8 @@ export const ShakeItOff = () => {
                     </div>
                 )}
 
-                 {/* Display Comments Section */}
-                 <div className="row">
+                {/* Display Comments Section */}
+                <div className="row">
                     <div className="col-md-12">
                         {comments.map((comment) => (
                             <div className="d-flex align-items-start mb-4" key={comment.id}>
@@ -900,7 +913,7 @@ export const CruelSummer = () => {
                                 <textarea
                                     className="form-control"
                                     rows="4"
-                                    placeholder="Share your thoughts on 'cruelSummer'!"
+                                    placeholder="What do you think is behind the beat?"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
@@ -1135,7 +1148,34 @@ export const Lovely = () => {
                 <div className="row">
                     <div className="col-md-12">
                         <p className="text-center">
-                            "Love is a lovely idea until it turns into something else."
+                        Thought I found a way
+Thought I found a way out (found)
+But you never go away (never go away)
+So I guess I gotta stay now
+Oh, I hope some day I'll make it out of here
+Even if it takes all night or a hundred years
+Need a place to hide, but I can't find one near
+Wanna feel alive, outside I can't fight my fear
+Isn't it lovely, all alone?
+Heart made of glass, my mind of stone
+Tear me to pieces, skin to bone
+Hello, welcome home
+Walkin' out of time
+Lookin' for a better place (lookin' for a better place)
+Something's on my mind (mind)
+Always in my head space
+But I know some day I'll make it out of here
+Even if it takes all night or a hundred years
+Need a place to hide, but I can't find one near
+Wanna feel alive, outside I can't fight my fear
+Isn't it lovely, all alone?
+Heart made of glass, my mind of stone
+Tear me to pieces, skin to bone
+Hello, welcome home
+Whoa, yeah
+Yeah, ah
+Whoa, whoa
+Hello, welcome home
                         </p>
                     </div>
                 </div>
@@ -1148,7 +1188,7 @@ export const Lovely = () => {
                                 <textarea
                                     className="form-control"
                                     rows="4"
-                                    placeholder="Share your thoughts on 'Lovely'!"
+                                    placeholder="What do you think is behind the beat?"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
@@ -1457,7 +1497,7 @@ But when can I hear the next one?
                                 <textarea
                                     className="form-control"
                                     rows="4"
-                                    placeholder="Share your thoughts on this song!"
+                                    placeholder="What do you think is behind the beat?"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
@@ -1771,7 +1811,7 @@ Tastes like she might be the one
                                 <textarea
                                     className="form-control"
                                     rows="4"
-                                    placeholder="Share your thoughts on this song!"
+                                    placeholder="What do you think is behind the beat?"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
@@ -2083,7 +2123,7 @@ export const UMyEverything = () => {
                                 <textarea
                                     className="form-control"
                                     rows="4"
-                                    placeholder="Share your thoughts on 'uMyEverything'!"
+                                    placeholder="What do you think is behind the beat?"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
@@ -2404,7 +2444,7 @@ export const OneDance = () => {
                                 <textarea
                                     className="form-control"
                                     rows="4"
-                                    placeholder="Share your thoughts on this song!"
+                                    placeholder="What do you think is behind the beat?"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
@@ -2717,7 +2757,7 @@ export const GodsPlan = () => {
                                 <textarea
                                     className="form-control"
                                     rows="4"
-                                    placeholder="Share your thoughts on this song!"
+                                    placeholder="What do you think is behind the beat?"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
@@ -3068,7 +3108,7 @@ export const MoneyTrees = () => {
                                 <textarea
                                     className="form-control"
                                     rows="4"
-                                    placeholder="Share your thoughts on 'moneyTrees'!"
+                                    placeholder="What do you think is behind the beat?"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
@@ -3430,7 +3470,7 @@ export const NotLikeUs = () => {
                                 <textarea
                                     className="form-control"
                                     rows="4"
-                                    placeholder="Share your thoughts on this song!"
+                                    placeholder="What do you think is behind the beat?"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
@@ -3772,7 +3812,7 @@ Once I sell this low, that's a million in a week
                                 <textarea
                                     className="form-control"
                                     rows="4"
-                                    placeholder="Share your thoughts on this song!"
+                                    placeholder="What do you think is behind the beat?"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
