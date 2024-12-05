@@ -2153,10 +2153,12 @@ export const UMyEverything = () => {
     );
 };
 
-// correct
-export const OneDance = () => { 
+// revised
+
+
+export const OneDance = () => {
     const [comments, setComments] = useState(() => {
-        const savedComments = localStorage.getItem('oneDanceComments');
+        const savedComments = localStorage.getItem('oneDance_comments');
         return savedComments ? JSON.parse(savedComments) : [];
     });
     const [newComment, setNewComment] = useState('');
@@ -2179,37 +2181,43 @@ export const OneDance = () => {
             const messageData = JSON.parse(event.data);
 
             if (messageData.type === 'comment') {
-                setComments((prevComments) => {
-                    const updatedComments = [...prevComments, messageData.comment];
-                    localStorage.setItem('oneDanceComments', JSON.stringify(updatedComments));
-                    return updatedComments;
-                });
+                if (messageData.page === '/oneDance') {
+                    setComments((prevComments) => {
+                        const updatedComments = [...prevComments, messageData.comment];
+                        localStorage.setItem('oneDance_comments', JSON.stringify(updatedComments));
+                        return updatedComments;
+                    });
+                }
             }
 
             if (messageData.type === 'delete') {
-                setComments((prevComments) => {
-                    const updatedComments = prevComments.filter(comment => comment.id !== messageData.commentId);
-                    localStorage.setItem('oneDanceComments', JSON.stringify(updatedComments));
-                    return updatedComments;
-                });
+                if (messageData.page === '/oneDance') {
+                    setComments((prevComments) => {
+                        const updatedComments = prevComments.filter(comment => comment.id !== messageData.commentId);
+                        localStorage.setItem('oneDance_comments', JSON.stringify(updatedComments));
+                        return updatedComments;
+                    });
+                }
             }
 
             if (messageData.type === 'like') {
-                setComments((prevComments) => {
-                    const updatedComments = prevComments.map((comment) => {
-                        if (comment.id === messageData.commentId) {
-                            return { ...comment, likes: comment.likes + 1 };
-                        }
-                        return comment;
+                if (messageData.page === '/oneDance') {
+                    setComments((prevComments) => {
+                        const updatedComments = prevComments.map((comment) => {
+                            if (comment.id === messageData.commentId) {
+                                return { ...comment, likes: comment.likes + 1 };
+                            }
+                            return comment;
+                        });
+                        localStorage.setItem('oneDance_comments', JSON.stringify(updatedComments));
+                        return updatedComments;
                     });
-                    localStorage.setItem('oneDanceComments', JSON.stringify(updatedComments));
-                    return updatedComments;
-                });
-                setUserLikes((prevLikes) => {
-                    const updatedLikes = { ...prevLikes, [messageData.commentId]: true };
-                    localStorage.setItem('userLikes', JSON.stringify(updatedLikes));
-                    return updatedLikes;
-                });
+                    setUserLikes((prevLikes) => {
+                        const updatedLikes = { ...prevLikes, [messageData.commentId]: true };
+                        localStorage.setItem('userLikes', JSON.stringify(updatedLikes));
+                        return updatedLikes;
+                    });
+                }
             }
         };
 
@@ -2223,6 +2231,7 @@ export const OneDance = () => {
         if (newComment.trim()) {
             const commentData = {
                 type: 'comment',
+                page: '/oneDance',
                 comment: {
                     username: userName ? userName : 'User',
                     text: newComment,
@@ -2255,6 +2264,7 @@ export const OneDance = () => {
             ws.send(JSON.stringify({
                 type: 'like',
                 commentId: commentId,
+                page: '/oneDance',
             }));
         };
     };
@@ -2273,12 +2283,13 @@ export const OneDance = () => {
                 ws.send(JSON.stringify({
                     type: 'delete',
                     commentId: commentId,
+                    page: '/oneDance',
                 }));
             };
 
             setComments((prevComments) => {
                 const updatedComments = prevComments.filter((comment) => comment.id !== commentId);
-                localStorage.setItem('oneDanceComments', JSON.stringify(updatedComments));
+                localStorage.setItem('oneDance_comments', JSON.stringify(updatedComments));
                 return updatedComments;
             });
         } else {
@@ -2295,11 +2306,11 @@ export const OneDance = () => {
 
         const ws = new WebSocket('ws://localhost:4000');
         ws.onopen = () => {
-            ws.send(JSON.stringify({ type: 'deleteAll' }));
+            ws.send(JSON.stringify({ type: 'deleteAll', page: '/oneDance' }));
         };
 
         setComments([]); // Remove all comments locally
-        localStorage.setItem('oneDanceComments', JSON.stringify([])); // Clear from localStorage
+        localStorage.setItem('oneDance_comments', JSON.stringify([])); // Clear from localStorage
     };
 
     // Only render comments for this specific page (oneDance by Billie Eilish)
@@ -2311,7 +2322,7 @@ export const OneDance = () => {
         <>
             <header className="py-5">
                 <div className="container text-center text-white">
-                    <h1 className="fw-bold" style={{ fontSize: '2rem' }}> One Dance by Drake</h1>
+                    <h1 className="fw-bold" style={{ fontSize: '2rem' }}>One Dance by Drake</h1>
                 </div>
             </header>
 
@@ -2319,7 +2330,8 @@ export const OneDance = () => {
                 <div className="row">
                     <div className="col-md-12">
                         <p className="text-center">
-                        Baby, I like your style
+                            {/* Lyrics for the song */}
+                            Baby, I like your style
                             Grips on your waist
                             Front way, back way
                             You know that I don't play
@@ -2392,7 +2404,7 @@ export const OneDance = () => {
                                 <textarea
                                     className="form-control"
                                     rows="4"
-                                    placeholder="Share your thoughts on 'oneDance'!"
+                                    placeholder="Share your thoughts on this song!"
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
@@ -2422,8 +2434,8 @@ export const OneDance = () => {
                     </div>
                 )}
 
-                 {/* Display Comments Section */}
-                 <div className="row">
+                {/* Display Comments Section */}
+                <div className="row">
                     <div className="col-md-12">
                         {comments.map((comment) => (
                             <div className="d-flex align-items-start mb-4" key={comment.id}>
@@ -2462,7 +2474,6 @@ export const OneDance = () => {
     );
 };
 
-// revised
 
 
 
