@@ -3112,7 +3112,170 @@ export const MoneyTrees = () => {
     );
 };
 
+
+
 export const NotLikeUs = () => {
+    const [comments, setComments] = useState(() => {
+        const savedComments = localStorage.getItem('notLikeUs_comments');
+        return savedComments ? JSON.parse(savedComments) : [];
+    });
+    const [newComment, setNewComment] = useState('');
+
+    const userName = localStorage.getItem('userName');
+    const isAdmin = userName === 'noah@dunn'; // Check if the logged-in user is the admin
+
+    const [userLikes, setUserLikes] = useState(() => {
+        const savedLikes = localStorage.getItem('userLikes');
+        return savedLikes ? JSON.parse(savedLikes) : {};
+    });
+
+    const location = useLocation(); // Get the current route
+    const currentPage = location.pathname; // Get the current page path
+
+    useEffect(() => {
+        const ws = new WebSocket('ws://localhost:4000');
+
+        ws.onmessage = (event) => {
+            const messageData = JSON.parse(event.data);
+
+            if (messageData.type === 'comment') {
+                if (messageData.page === '/notLikeUs') {
+                    setComments((prevComments) => {
+                        const updatedComments = [...prevComments, messageData.comment];
+                        localStorage.setItem('notLikeUs_comments', JSON.stringify(updatedComments));
+                        return updatedComments;
+                    });
+                }
+            }
+
+            if (messageData.type === 'delete') {
+                if (messageData.page === '/notLikeUs') {
+                    setComments((prevComments) => {
+                        const updatedComments = prevComments.filter(comment => comment.id !== messageData.commentId);
+                        localStorage.setItem('notLikeUs_comments', JSON.stringify(updatedComments));
+                        return updatedComments;
+                    });
+                }
+            }
+
+            if (messageData.type === 'like') {
+                if (messageData.page === '/notLikeUs') {
+                    setComments((prevComments) => {
+                        const updatedComments = prevComments.map((comment) => {
+                            if (comment.id === messageData.commentId) {
+                                return { ...comment, likes: comment.likes + 1 };
+                            }
+                            return comment;
+                        });
+                        localStorage.setItem('notLikeUs_comments', JSON.stringify(updatedComments));
+                        return updatedComments;
+                    });
+                    setUserLikes((prevLikes) => {
+                        const updatedLikes = { ...prevLikes, [messageData.commentId]: true };
+                        localStorage.setItem('userLikes', JSON.stringify(updatedLikes));
+                        return updatedLikes;
+                    });
+                }
+            }
+        };
+
+        return () => {
+            ws.close();
+        };
+    }, []);
+
+    const handleCommentSubmit = (e) => {
+        e.preventDefault();
+        if (newComment.trim()) {
+            const commentData = {
+                type: 'comment',
+                page: '/notLikeUs',
+                comment: {
+                    username: userName ? userName : 'User',
+                    text: newComment,
+                    likes: 0,
+                    id: Date.now(),
+                }
+            };
+
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify(commentData));
+                setNewComment('');
+            };
+        }
+    };
+
+    const handleLike = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to like a comment');
+            return;
+        }
+
+        if (userLikes[commentId]) {
+            alert('You can only like a comment once');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({
+                type: 'like',
+                commentId: commentId,
+                page: '/notLikeUs',
+            }));
+        };
+    };
+
+    const handleDelete = (commentId) => {
+        if (!userName) {
+            alert('You must be logged in to delete a comment');
+            return;
+        }
+
+        const comment = comments.find(comment => comment.id === commentId);
+
+        if (comment && comment.username === userName) {
+            const ws = new WebSocket('ws://localhost:4000');
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    type: 'delete',
+                    commentId: commentId,
+                    page: '/notLikeUs',
+                }));
+            };
+
+            setComments((prevComments) => {
+                const updatedComments = prevComments.filter((comment) => comment.id !== commentId);
+                localStorage.setItem('notLikeUs_comments', JSON.stringify(updatedComments));
+                return updatedComments;
+            });
+        } else {
+            alert('You can only delete your own comments');
+        }
+    };
+
+    // Admin functionality to delete all comments
+    const handleDeleteAllComments = () => {
+        if (!isAdmin) {
+            alert('You must be an admin to delete all comments');
+            return;
+        }
+
+        const ws = new WebSocket('ws://localhost:4000');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({ type: 'deleteAll', page: '/notLikeUs' }));
+        };
+
+        setComments([]); // Remove all comments locally
+        localStorage.setItem('notLikeUs_comments', JSON.stringify([])); // Clear from localStorage
+    };
+
+    // Only render comments for this specific page (notLikeUs by Billie Eilish)
+    if (currentPage !== '/notLikeUs') {
+        return null; // Don't render comments section for other pages
+    }
+
     return (
         <>
             <header className="py-5">
@@ -3121,12 +3284,12 @@ export const NotLikeUs = () => {
                 </div>
             </header>
 
-            {/* Main Content: Lyrics and Comment Section */}
             <div className="container my-5">
                 <div className="row">
-                    {/* Song Lyrics Section */}
-                    <div className="col-md-6">
-                        <p className="text-center">… Psst, I see dead people
+                    <div className="col-md-12">
+                        <p className="text-center">
+                            {/* Lyrics for the song */}
+                            … Psst, I see dead people
                             (Mustard on the beat, hoe)
                             … Ayy, Mustard on the beat, hoe
                             Deebo, any rap nigga, he a free throw
@@ -3228,49 +3391,82 @@ export const NotLikeUs = () => {
                             Are we locked in?
                             Then step this way, step that way
                             Then step this way, step that way
+                            {/* Rest of the lyrics */}
                         </p>
                     </div>
+                </div>
 
-                    {/* Comment Section */}
-                    <div className="col-md-6">
-                        {/* Social Media Style Comments */}
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/635359428/photo/new-york-ny-rumor-the-german-shepherd-poses-for-photos-after-winning-best-in-show-at-the.jpg?s=612x612&w=0&k=20&c=R8o1kV8KPl9z7QunBBgOHupjm_sY7n-U-7PFKKJZSC0="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude1:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">5 minutes ago</small>
-                            </div>
-                        </div>
-                        <div className="d-flex align-items-start mb-4">
-                            <img
-                                src="https://media.gettyimages.com/id/85438939/photo/a-soft-coated-wheaten-terrier-dog-named-zoey-waits-for-the-start-of-a-parade-at-the-woofstock.jpg?s=612x612&w=0&k=20&c=n644q3tfcbFR1qEPG51O15KUiF3pMrKl5zuIY4V7sjk="
-                                alt="User Avatar"
-                                className="small-avatar me-3"
-                            />
-                            <div className="border p-3 rounded w-100">
-                                <p className="mb-1"><strong>dude2:</strong> I really felt where (s)he said __________. I think that means ______</p>
-                                <small className="text-muted">10 minutes ago</small>
-                            </div>
-                        </div>
-                        {/* Comment Form */}
-                        <form>
-                            <div className="form-group mb-3">
+                {/* Comment Form */}
+                {userName && (
+                    <div className="row">
+                        <div className="col-md-12">
+                            <fieldset id="comment-controls">
                                 <textarea
                                     className="form-control"
-                                    id="commentBox"
-                                    name="commentBox"
                                     rows="4"
-                                    placeholder="share what you think is behind the beat"
-                                ></textarea>
+                                    placeholder="Share your thoughts on this song!"
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                />
+                                <div className="text-center mt-3">
+                                    <button
+                                        type="submit"
+                                        onClick={handleCommentSubmit}
+                                        className="btn btn-primary comment"
+                                    >
+                                        Post Comment
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                )}
+
+                {/* Admin Delete All Comments Button */}
+                {isAdmin && (
+                    <div className="text-center mt-3">
+                        <button
+                            className="btn btn-danger"
+                            onClick={handleDeleteAllComments}
+                        >
+                            Delete All Comments
+                        </button>
+                    </div>
+                )}
+
+                {/* Display Comments Section */}
+                <div className="row">
+                    <div className="col-md-12">
+                        {comments.map((comment) => (
+                            <div className="d-flex align-items-start mb-4" key={comment.id}>
+                                <img
+                                    src="https://media.istockphoto.com/id/518552551/photo/male-silhouette-profile-picture-with-question-mark.jpg?b=1&s=612x612&w=0&k=20&c=L32hXWmACbW9z2pffVuIjWn720NWllGPJJI2galSiDQ="
+                                    alt="User Avatar"
+                                    className="small-avatar me-3"
+                                />
+                                <div className="border p-3 rounded w-100">
+                                    <p className="mb-1">
+                                        <strong>{comment.username}:</strong> {comment.text}
+                                    </p>
+                                    <div className="d-flex justify-content-between">
+                                        <button 
+                                            className="btn btn-sm btn-outline-primary"
+                                            onClick={() => handleLike(comment.id)}
+                                        >
+                                            👍 {comment.likes}
+                                        </button>
+                                        {comment.username === userName && (
+                                            <button 
+                                                className="btn btn-sm btn-outline-danger"
+                                                onClick={() => handleDelete(comment.id)}
+                                            >
+                                                🗑️ Delete
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                            <div className="text-center">
-                                <input type="submit" className="btn btn-primary" value="Comment" />
-                            </div>
-                        </form>
+                        ))}
                     </div>
                 </div>
             </div>
