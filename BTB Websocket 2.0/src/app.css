@@ -53,3 +53,24 @@ body, header {
 .custom-footer-bottom{
     background-color: #bebdbd;
 }
+.auth-container {
+    display: flex;
+    justify-content: flex-end; /* Aligns items to the right */
+    padding: 10px; /* Optional: Adds some padding */
+  }
+  
+  /* Styles specifically for the button */
+  .auth-btn {
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .auth-btn:hover {
+    background-color: #5a6268;
+  }
