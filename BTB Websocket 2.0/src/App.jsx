@@ -57,14 +57,14 @@ export default function App() {
             </div>
 
             <div className='d-flex justify-content-between w-100'>
-              <form className='d-flex flex-grow-1 me-2'>
+              {/* <form className='d-flex flex-grow-1 me-2'>
                 <input
                   className='form-control me-2'
                   type='text'
                   placeholder={song ? `search "${song.title}" by ${song.artist}` : 'Loading...'}
                 />
                 <button className='btn btn-primary' type='button'>Search</button>
-              </form>
+              </form> */}
               {/* <NavLink to='/login' className='btn btn-primary' type='button'>Login</NavLink> */}
               {authState === AuthState.Authenticated ? (
         <button
