@@ -27,64 +27,57 @@ export default function App() {
   return (
     <BrowserRouter>
       <div>
-        <nav className='navbar navbar-expand-sm navbar-dark custom-navbar'>
-          <div className='container-fluid'>
-            <NavLink className='navbar-brand' to='/'>Behind the Beat</NavLink>
+  <nav className='navbar navbar-expand-sm navbar-dark custom-navbar'>
+    <div className='container-fluid'>
+      <NavLink className='navbar-brand' to='/'>Behind the Beat</NavLink>
 
+      <button
+        className='navbar-toggler'
+        type='button'
+        data-bs-toggle='collapse'
+        data-bs-target='#collapsibleNavbar'
+      >
+        <span className='navbar-toggler-icon'></span>
+      </button>
+
+      <div className='collapse navbar-collapse' id='collapsibleNavbar'>
+        <ul className='navbar-nav me-auto'>
+          <li className='nav-item'>
+            <NavLink className='nav-link' to='/about'>About</NavLink>
+          </li>
+          <li className='nav-item'>
+            <NavLink className='nav-link' to='/home'>Home</NavLink>
+          </li>
+          {authState === AuthState.Authenticated && (
+            <li className='nav-item'>
+              <NavLink className='nav-link' to='/favorites'>Favorites</NavLink>
+            </li>
+          )}
+        </ul>
+        
+        {/* Login/Logout Button */}
+        <div className='d-flex'>
+          {authState === AuthState.Authenticated ? (
             <button
-              className='navbar-toggler'
+              className='btn btn-secondary auth-btn'
               type='button'
-              data-bs-toggle='collapse'
-              data-bs-target='#collapsibleNavbar'
+              onClick={() => logout(() => {
+                setAuthState(AuthState.Unauthenticated); // Update auth state
+                setUserName(null); // Clear the username
+              })}
             >
-              <span className='navbar-toggler-icon'></span>
+              Logout
             </button>
+          ) : (
+            <NavLink to='/login' className='btn btn-primary auth-btn' type='button'>
+              Login
+            </NavLink>
+          )}
+        </div>
+      </div>
+    </div>
+  </nav>
 
-            <div className='collapse navbar-collapse' id='collapsibleNavbar'>
-              <ul className='navbar-nav me-auto'>
-                <li className='nav-item'>
-                  <NavLink className='nav-link' to='/about'>About</NavLink>
-                </li>
-                <li className='nav-item'>
-                  <NavLink className='nav-link' to='/home'>Home</NavLink>
-                </li>
-                {authState === AuthState.Authenticated && (
-                <li className='nav-item'>
-                  <NavLink className='nav-link' to='/favorites'>favorites</NavLink>
-                </li>
-              )}
-              </ul>
-            </div>
-
-            <div className='d-flex justify-content-between w-100'>
-              {/* <form className='d-flex flex-grow-1 me-2'>
-                <input
-                  className='form-control me-2'
-                  type='text'
-                  placeholder={song ? `search "${song.title}" by ${song.artist}` : 'Loading...'}
-                />
-                <button className='btn btn-primary' type='button'>Search</button>
-              </form> */}
-              {/* <NavLink to='/login' className='btn btn-primary' type='button'>Login</NavLink> */}
-              {authState === AuthState.Authenticated ? (
-        <button
-          className='btn btn-secondary'
-          type='button'
-          onClick={() => logout(() => {
-            setAuthState(AuthState.Unauthenticated); // Update auth state
-            setUserName(null); // Clear the username
-          })}
-        >
-          Logout
-        </button>
-      ) : (
-        <NavLink to='/login' className='btn btn-primary' type='button'>
-          Login
-        </NavLink>
-      )}
-            </div>
-          </div>
-        </nav>
 
         <Routes>
           <Route path="/" element={<Home />} />

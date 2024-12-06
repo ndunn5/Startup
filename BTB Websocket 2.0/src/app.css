@@ -74,3 +74,18 @@ body, header {
   .auth-btn:hover {
     background-color: #5a6268;
   }
+
+/* Styles for the nav container */
+.navbar {
+    display: flex;
+    justify-content: flex-end; /* Aligns all content to the right */
+    padding: 10px; /* Optional padding */
+  }
+  
+  /* Styling for the button */
+
+  
+  .auth-btn:hover {
+    background-color: #5a6268;
+  }
+  
