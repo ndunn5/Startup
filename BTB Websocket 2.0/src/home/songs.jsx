@@ -22,7 +22,7 @@ export const BlankSpace = () => {
     const currentPage = location.pathname; // Get the current page path
 
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
 
         ws.onmessage = (event) => {
             const messageData = JSON.parse(event.data);
@@ -87,7 +87,7 @@ export const BlankSpace = () => {
                 }
             };
 
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify(commentData));
                 setNewComment('');
@@ -106,7 +106,7 @@ export const BlankSpace = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({
                 type: 'like',
@@ -125,7 +125,7 @@ export const BlankSpace = () => {
         const comment = comments.find(comment => comment.id === commentId);
 
         if (comment && comment.username === userName) {
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     type: 'delete',
@@ -151,7 +151,7 @@ export const BlankSpace = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({ type: 'deleteAll', page: '/blankSpace' }));
         };
@@ -364,7 +364,7 @@ export const ShakeItOff = () => {
     const currentPage = location.pathname; // Get the current page path
 
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
 
         ws.onmessage = (event) => {
             const messageData = JSON.parse(event.data);
@@ -429,7 +429,7 @@ export const ShakeItOff = () => {
                 }
             };
 
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify(commentData));
                 setNewComment('');
@@ -448,7 +448,7 @@ export const ShakeItOff = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({
                 type: 'like',
@@ -467,7 +467,7 @@ export const ShakeItOff = () => {
         const comment = comments.find(comment => comment.id === commentId);
 
         if (comment && comment.username === userName) {
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     type: 'delete',
@@ -493,7 +493,7 @@ export const ShakeItOff = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({ type: 'deleteAll', page: '/shakeItOff' }));
         };
@@ -686,7 +686,7 @@ export const CruelSummer = () => {
     const currentPage = location.pathname; // Get the current page path
 
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
 
         ws.onmessage = (event) => {
             const messageData = JSON.parse(event.data);
@@ -744,7 +744,7 @@ export const CruelSummer = () => {
                 }
             };
 
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify(commentData));
                 setNewComment('');
@@ -763,7 +763,7 @@ export const CruelSummer = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({
                 type: 'like',
@@ -781,7 +781,7 @@ export const CruelSummer = () => {
         const comment = comments.find(comment => comment.id === commentId);
 
         if (comment && comment.username === userName) {
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     type: 'delete',
@@ -806,7 +806,7 @@ export const CruelSummer = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({ type: 'deleteAll' }));
         };
@@ -1002,7 +1002,7 @@ export const Lovely = () => {
     const currentPage = location.pathname; // Get the current page path
 
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
 
         ws.onmessage = (event) => {
             const messageData = JSON.parse(event.data);
@@ -1060,7 +1060,7 @@ export const Lovely = () => {
                 }
             };
 
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify(commentData));
                 setNewComment('');
@@ -1079,7 +1079,7 @@ export const Lovely = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({
                 type: 'like',
@@ -1097,7 +1097,7 @@ export const Lovely = () => {
         const comment = comments.find(comment => comment.id === commentId);
 
         if (comment && comment.username === userName) {
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     type: 'delete',
@@ -1122,7 +1122,7 @@ export const Lovely = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({ type: 'deleteAll' }));
         };
@@ -1277,7 +1277,7 @@ export const Blue = () => {
     const currentPage = location.pathname; // Get the current page path
 
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
 
         ws.onmessage = (event) => {
             const messageData = JSON.parse(event.data);
@@ -1342,7 +1342,7 @@ export const Blue = () => {
                 }
             };
 
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify(commentData));
                 setNewComment('');
@@ -1361,7 +1361,7 @@ export const Blue = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({
                 type: 'like',
@@ -1380,7 +1380,7 @@ export const Blue = () => {
         const comment = comments.find(comment => comment.id === commentId);
 
         if (comment && comment.username === userName) {
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     type: 'delete',
@@ -1406,7 +1406,7 @@ export const Blue = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({ type: 'deleteAll', page: '/blue' }));
         };
@@ -1587,7 +1587,7 @@ export const Lunch = () => {
     const currentPage = location.pathname; // Get the current page path
 
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
 
         ws.onmessage = (event) => {
             const messageData = JSON.parse(event.data);
@@ -1652,7 +1652,7 @@ export const Lunch = () => {
                 }
             };
 
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify(commentData));
                 setNewComment('');
@@ -1671,7 +1671,7 @@ export const Lunch = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({
                 type: 'like',
@@ -1690,7 +1690,7 @@ export const Lunch = () => {
         const comment = comments.find(comment => comment.id === commentId);
 
         if (comment && comment.username === userName) {
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     type: 'delete',
@@ -1716,7 +1716,7 @@ export const Lunch = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({ type: 'deleteAll', page: '/lunch' }));
         };
@@ -1901,7 +1901,7 @@ export const UMyEverything = () => {
     const currentPage = location.pathname; // Get the current page path
 
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
 
         ws.onmessage = (event) => {
             const messageData = JSON.parse(event.data);
@@ -1959,7 +1959,7 @@ export const UMyEverything = () => {
                 }
             };
 
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify(commentData));
                 setNewComment('');
@@ -1978,7 +1978,7 @@ export const UMyEverything = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({
                 type: 'like',
@@ -1996,7 +1996,7 @@ export const UMyEverything = () => {
         const comment = comments.find(comment => comment.id === commentId);
 
         if (comment && comment.username === userName) {
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     type: 'delete',
@@ -2021,7 +2021,7 @@ export const UMyEverything = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({ type: 'deleteAll' }));
         };
@@ -2215,7 +2215,7 @@ export const OneDance = () => {
     const currentPage = location.pathname; // Get the current page path
 
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
 
         ws.onmessage = (event) => {
             const messageData = JSON.parse(event.data);
@@ -2280,7 +2280,7 @@ export const OneDance = () => {
                 }
             };
 
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify(commentData));
                 setNewComment('');
@@ -2299,7 +2299,7 @@ export const OneDance = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({
                 type: 'like',
@@ -2318,7 +2318,7 @@ export const OneDance = () => {
         const comment = comments.find(comment => comment.id === commentId);
 
         if (comment && comment.username === userName) {
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     type: 'delete',
@@ -2344,7 +2344,7 @@ export const OneDance = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({ type: 'deleteAll', page: '/oneDance' }));
         };
@@ -2536,7 +2536,7 @@ export const GodsPlan = () => {
     const currentPage = location.pathname; // Get the current page path
 
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
 
         ws.onmessage = (event) => {
             const messageData = JSON.parse(event.data);
@@ -2601,7 +2601,7 @@ export const GodsPlan = () => {
                 }
             };
 
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify(commentData));
                 setNewComment('');
@@ -2620,7 +2620,7 @@ export const GodsPlan = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({
                 type: 'like',
@@ -2639,7 +2639,7 @@ export const GodsPlan = () => {
         const comment = comments.find(comment => comment.id === commentId);
 
         if (comment && comment.username === userName) {
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     type: 'delete',
@@ -2665,7 +2665,7 @@ export const GodsPlan = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({ type: 'deleteAll', page: '/godsPlan' }));
         };
@@ -2847,7 +2847,7 @@ export const MoneyTrees = () => {
     const currentPage = location.pathname; // Get the current page path
 
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
 
         ws.onmessage = (event) => {
             const messageData = JSON.parse(event.data);
@@ -2905,7 +2905,7 @@ export const MoneyTrees = () => {
                 }
             };
 
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify(commentData));
                 setNewComment('');
@@ -2924,7 +2924,7 @@ export const MoneyTrees = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({
                 type: 'like',
@@ -2942,7 +2942,7 @@ export const MoneyTrees = () => {
         const comment = comments.find(comment => comment.id === commentId);
 
         if (comment && comment.username === userName) {
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     type: 'delete',
@@ -2967,7 +2967,7 @@ export const MoneyTrees = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({ type: 'deleteAll' }));
         };
@@ -3199,7 +3199,7 @@ export const NotLikeUs = () => {
     const currentPage = location.pathname; // Get the current page path
 
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
 
         ws.onmessage = (event) => {
             const messageData = JSON.parse(event.data);
@@ -3264,7 +3264,7 @@ export const NotLikeUs = () => {
                 }
             };
 
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify(commentData));
                 setNewComment('');
@@ -3283,7 +3283,7 @@ export const NotLikeUs = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({
                 type: 'like',
@@ -3302,7 +3302,7 @@ export const NotLikeUs = () => {
         const comment = comments.find(comment => comment.id === commentId);
 
         if (comment && comment.username === userName) {
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     type: 'delete',
@@ -3328,7 +3328,7 @@ export const NotLikeUs = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({ type: 'deleteAll', page: '/notLikeUs' }));
         };
@@ -3559,7 +3559,7 @@ export const LikeThat = () => {
     const currentPage = location.pathname; // Get the current page path
 
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
 
         ws.onmessage = (event) => {
             const messageData = JSON.parse(event.data);
@@ -3624,7 +3624,7 @@ export const LikeThat = () => {
                 }
             };
 
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify(commentData));
                 setNewComment('');
@@ -3643,7 +3643,7 @@ export const LikeThat = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({
                 type: 'like',
@@ -3662,7 +3662,7 @@ export const LikeThat = () => {
         const comment = comments.find(comment => comment.id === commentId);
 
         if (comment && comment.username === userName) {
-            const ws = new WebSocket('ws://localhost:4000');
+            const ws = new WebSocket('http://localhost:4000 ');
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     type: 'delete',
@@ -3688,7 +3688,7 @@ export const LikeThat = () => {
             return;
         }
 
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('http://localhost:4000 ');
         ws.onopen = () => {
             ws.send(JSON.stringify({ type: 'deleteAll', page: '/likeThat' }));
         };
